@@ -1,0 +1,13 @@
+###create user or guide
+POST http://localhost:3000/userguide-api/userguide
+Content-Type:application/json
+
+{
+    "username":"John",
+    "email":"john@gmail.com",
+    "contact":999999999,
+    "role":"user"
+}
+###get request
+GET http://localhost:3000/userguide-api/userguide
+###update user
