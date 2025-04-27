@@ -10,4 +10,41 @@ Content-Type:application/json
 }
 ###get request
 GET http://localhost:3000/userguide-api/userguide
-###update user
+
+###post request
+POST http://localhost:3000/admin-api/admin/hotels
+Content-Type: application/json
+
+[
+  {
+    "nameOfHotel": "Ocean View Resort",
+    "address": {
+      "state": "Goa",
+      "city": "Panaji",
+      "landmark": "Near Beach Road",
+      "pincode": 403001
+    },
+    "costperDay": 5000,
+    "availableRooms": 15,
+    "images": [
+      "https://example.com/ocean1.jpg",
+      "https://example.com/ocean2.jpg"
+    ],
+    "luxuries": [
+      "Swimming Pool",
+      "Wi-Fi",
+      "Breakfast Included",
+      "Private Beach"
+    ],
+    "rating": 4.5,
+    "bookings": [
+      {
+        "user": "662d1f43e8d1c93a56789abc", 
+        "checkIn": "2025-05-01T12:00:00.000Z",
+        "checkOut": "2025-05-05T12:00:00.000Z",
+        "totalPrice": 20000,
+        "paymentStatus": "paid"
+      }
+    ]
+  }
+]

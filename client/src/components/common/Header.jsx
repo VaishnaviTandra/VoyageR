@@ -44,7 +44,7 @@ function Header() {
               />
               <p className="text-center mt-1">{user?.username}</p>
             </div>
-            <Link to="destinations">Destinations</Link>
+            <Link to="cities">Cities</Link>
             <button className="btn btn-danger" onClick={handleSignOut}>
               Sign Out
             </button>

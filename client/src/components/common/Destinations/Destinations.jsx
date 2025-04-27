@@ -1,29 +1,23 @@
-// Final: Destinations.js (Frontend Component)
-
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@clerk/clerk-react';
 import axios from 'axios';
 
 function Destinations() {
   const [destinations, setDestinations] = useState([]);
   const [error, setError] = useState('');
-  const [categories] = useState([
-    'All', 'Delhi', 'Mumbai', 'Benguluru', 'Hyderabad', 'Chennai',
-    'Kolkata', 'Pune', 'Ahmedabad', 'Jaipur', 'Lucknow', 'Varanasi',
-    'Goa', 'Amritsar', 'Shimla', 'Udaipur'
-  ]);
-  const [selectCat, setSelectCat] = useState('All');
   const [isLoading, setIsLoading] = useState(true);
+
   const navigate = useNavigate();
   const { getToken } = useAuth();
+  const location = useLocation();
+  const city = location.state?.city || 'All'; // fallback to 'All' if city not provided
 
   async function getDestinations() {
     setIsLoading(true);
     const token = await getToken();
     try {
-      let res = await axios.get(`http://localhost:3000/admin-api/admin/destinations/${selectCat}`
-, {
+      let res = await axios.get(`http://localhost:3000/admin-api/admin/destinations/${city}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -42,26 +36,18 @@ function Destinations() {
 
   function gotoDestinationById(destinationObj) {
     navigate(`/destinationbyid/${destinationObj._id}`, { state: destinationObj });
-
   }
 
   useEffect(() => {
     getDestinations();
-  }, [selectCat]);
+  }, [city]);
 
   return (
     <div className="container">
       <div>
         {error && <p className="text-danger display-4 text-center mt-5">{error}</p>}
 
-        <div className="mb-4 mt-0 d-flex">
-          <label className="form-label text-white text-end me-3 lead fs-5">Filter by category:</label>
-          <select className="form-select w-50" value={selectCat} onChange={(e) => setSelectCat(e.target.value)}>
-            {categories.map((cat, index) => (
-              <option key={index} value={cat}>{cat}</option>
-            ))}
-          </select>
-        </div>
+        <h2 className="text-center my-4">Destinations in {city}</h2>
 
         {isLoading ? (
           <div className="text-center mt-4">

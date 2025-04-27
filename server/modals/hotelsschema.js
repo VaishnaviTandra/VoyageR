@@ -24,9 +24,8 @@ const bookingSchema = new mongoose.Schema({
 const hotelSchema=new mongoose.Schema({
     nameOfHotel:{
         type:String,
-        required:true
-    },destination:{
-         type: mongoose.Schema.Types.ObjectId, ref: "Destination" 
+        required:true,
+        unique:true
     },address:addressSchema,
     costperDay:{
         type:Number,
