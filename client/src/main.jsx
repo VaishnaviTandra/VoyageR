@@ -17,7 +17,10 @@ import PostDestination from './components/admin/PostDestination.jsx';
 import PostHotel from './components/admin/PostHotel.jsx';
 import Userguidecontext from './contexts/UserGuidecontext.jsx';
 import Viewuserguides from './components/admin/Viewuserguides.jsx';
-
+import Guidedetails from './components/guide/guidedetails.jsx';
+import Cities from './components/common/Destinations/Cities.jsx';
+import CityById from './components/common/Destinations/CityById.jsx';
+import Hotels from './components/common/Destinations/Hotels.jsx';
 const browserRouterObj = createBrowserRouter([
   {
     path: '',
@@ -45,6 +48,18 @@ const browserRouterObj = createBrowserRouter([
       {
         path: 'destinationbyid/:id',
         element: <DestinationById />
+      },{
+        path:"cities",
+        element:<Cities/>
+      },{
+        path:"cities/:id",
+        element:<CityById/>
+      },{
+        path:'hotels',
+        element:<Hotels/>
+      },{
+        path:'hotelbyid/:id',
+        element:<HotelById/>
       },
 
       // ✅ User profile route
@@ -97,6 +112,9 @@ const browserRouterObj = createBrowserRouter([
             element: <Navigate to="destinations" />
           }
         ]
+      },{
+        path:'guidedetails',
+        element:<Guidedetails/>
       },
 
       // ✅ Admin profile route

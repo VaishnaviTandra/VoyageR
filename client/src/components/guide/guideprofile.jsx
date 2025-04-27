@@ -1,171 +1,260 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const cities = [
-  { name: 'Delhi' },
-  { name: 'Mumbai' },
-  { name: 'Bengaluru' },
-  { name: 'Hyderabad' },
-  { name: 'Chennai' },
-  { name: 'Kolkata' },
-  { name: 'Pune' },
-  { name: 'Ahmedabad' },
-  { name: 'Jaipur' },
-  { name: 'Lucknow' },
-  { name: 'Varanasi' },
-  { name: 'Goa' },
-  { name: 'Amritsar' },
-  { name: 'Shimla' },
-  { name: 'Udaipur' }
-];
-
 function GuideProfile() {
-  const [languages, setLanguages] = useState(['English', 'Hindi', 'Punjabi', 'Telugu','Marathi','Gujarathi','Kannada','Tamil']);
-  const [availability, setAvailability] = useState([]);
-  const [city, setCity] = useState('');
-  const [destinations, setDestinations] = useState([]);
+  const navigate = useNavigate();
+
+  const languageOptions = ['English', 'Hindi', 'Punjabi', 'Telugu', 'Marathi', 'Gujarati', 'Kannada', 'Tamil'];
+  const availabilityOptions = ['8am-9pm', '9am-10pm', '10am-11pm'];
+  const cityOptions = ['Delhi', 'Mumbai', 'Hyderabad', 'Bengaluru', 'Chennai', 'Kolkata', 'Pune', 'Ahmedabad', 'Jaipur', 'Lucknow', 'Varanasi', 'Goa', 'Amritsar', 'Shimla', 'Udaipur'];
+
+  const [currentUser, setCurrentUser] = useState(null);
   const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    contact: '',
+    profileImgUrl: '',
+    role: 'guide',
+    firstName: '',
+    lastName: '',
     languages: [],
     availability: [],
     price: '',
-    destination: '',
-    city: '',
+    city: ''
   });
 
   useEffect(() => {
-    if (city) {
-      axios.get(`/api/destinations?city=${city}`).then((response) => {
-        setDestinations(response.data);
-      });
+    const storedUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (storedUser) {
+      setCurrentUser(storedUser);
+      setFormData((prev) => ({
+        ...prev,
+        username: storedUser.username || '',
+        email: storedUser.email || '',
+        profileImgUrl: storedUser.profileImgUrl || '',
+        firstName: storedUser.firstName || '',
+        lastName: storedUser.lastName || ''
+      }));
     }
-  }, [city]);
+  }, []);
 
-  const handleCheckboxChange = (e) => {
-    const { value, checked } = e.target;
-    if (checked) {
-      setFormData({
-        ...formData,
-        languages: [...formData.languages, value],
-      });
-    } else {
-      setFormData({
-        ...formData,
-        languages: formData.languages.filter((lang) => lang !== value),
-      });
-    }
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleAvailabilityChange = (e) => {
+  const handleCheckboxChange = (e, field) => {
     const { value, checked } = e.target;
-    if (checked) {
-      setAvailability([...availability, value]);
-    } else {
-      setAvailability(availability.filter((time) => time !== value));
-    }
+    setFormData((prev) => ({
+      ...prev,
+      [field]: checked
+        ? [...prev[field], value]
+        : prev[field].filter((item) => item !== value),
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const { username, email, contact, price, city } = formData;
+
+    if (!username.trim() || !email.trim() || !price || !city.trim()) {
+      alert('Please fill out all required fields.');
+      return;
+    }
+
+    if (!/^\d{10}$/.test(contact)) {
+      alert('Please enter a valid 10-digit contact number.');
+      return;
+    }
+
+    if (parseInt(price) <= 0) {
+      alert('Price must be a positive number.');
+      return;
+    }
+console.log(formData)
+    const payload = {
+      username: formData.username,
+      email: formData.email,
+      contact: parseInt(formData.contact),
+      profileImgUrl: formData.profileImgUrl,
+      role: 'guide',
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      guides: [{
+        languages: formData.languages,
+        availability: formData.availability,
+        price: parseInt(formData.price),
+        city: formData.city
+      }]
+    };
+
     try {
-      await axios.post('/guide-api/guides', formData);
+      await axios.post('http://localhost:3000/guide-api/guides', payload);
       alert('Form submitted successfully!');
+      navigate('/guidedetails');
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Error submitting form:', error.response ? error.response.data : error);
+      alert('Something went wrong while submitting the form.');
     }
   };
 
+  if (!currentUser) return <p>Loading profile...</p>;
+
   return (
     <div className="container mt-5">
-      <h2>Guide Profile</h2>
-      <form onSubmit={handleSubmit}>
-        {/* Languages */}
-        <div className="form-group">
-          <label>Languages</label>
-          <div>
-            {languages.map((lang) => (
-              <div className="form-check" key={lang}>
-                <input
-                  type="checkbox"
-                  className="form-check-input"
-                  value={lang}
-                  onChange={handleCheckboxChange}
-                />
-                <label className="form-check-label">{lang}</label>
-              </div>
-            ))}
+      <div className="card p-4 shadow">
+        <h2 className="mb-4">Guide Profile</h2>
+        <form onSubmit={handleSubmit}>
+
+          {/* Username */}
+          <div className="form-group row">
+            <label className="col-sm-2 col-form-label">Name</label>
+            <div className="col-sm-10">
+              <input
+                type="text"
+                name="username"
+                className="form-control"
+                value={formData.username}
+                disabled
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Availability */}
-        <div className="form-group">
-          <label>Availability</label>
-          <div>
-            {['8am-9am', '9am-10am', '10am-11am', '11am-12pm', '12pm-1pm', '1pm-2pm', '2pm-3pm', '3pm-4pm', '4pm-5pm', '5pm-6pm', '6pm-7pm', '7pm-8pm'].map((time) => (
-              <div className="form-check" key={time}>
-                <input
-                  type="checkbox"
-                  className="form-check-input"
-                  value={time}
-                  onChange={handleAvailabilityChange}
-                />
-                <label className="form-check-label">{time}</label>
-              </div>
-            ))}
+          {/* Email */}
+          <div className="form-group row mt-3">
+            <label className="col-sm-2 col-form-label">Email</label>
+            <div className="col-sm-10">
+              <input
+                type="email"
+                name="email"
+                className="form-control"
+                value={formData.email}
+                disabled
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Price */}
-        <div className="form-group">
-          <label>Price</label>
-          <input
-            type="number"
-            className="form-control"
-            value={formData.price}
-            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-          />
-        </div>
+          {/* Profile Image */}
+          <div className="form-group row mt-3">
+            <label className="col-sm-2 col-form-label">Profile Image</label>
+            <div className="col-sm-10">
+              {formData.profileImgUrl ? (
+                <img src={formData.profileImgUrl} alt="Profile" width="100" height="100" className="rounded-circle" />
+              ) : (
+                <p>No profile image available</p>
+              )}
+            </div>
+          </div>
 
-        {/* City */}
-        <div className="form-group">
-          <label>City</label>
-          <select
-            className="form-control"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-          >
-            <option value="">Select a city</option>
-            {cities.map((cityOption) => (
-              <option key={cityOption.name} value={cityOption.name}>
-                {cityOption.name}
-              </option>
-            ))}
-          </select>
-        </div>
+          {/* Contact */}
+          <div className="form-group row mt-3">
+            <label className="col-sm-2 col-form-label">Contact</label>
+            <div className="col-sm-10">
+              <input
+                type="text"
+                name="contact"
+                className="form-control"
+                value={formData.contact}
+                onChange={handleInputChange}
+                maxLength="10"
+                required
+              />
+            </div>
+          </div>
 
-        {/* Destination */}
-        <div className="form-group">
-          <label>Destination</label>
-          <select
-            className="form-control"
-            value={formData.destination}
-            onChange={(e) =>
-              setFormData({ ...formData, destination: e.target.value })
-            }
-          >
-            <option value="">Select a destination</option>
-            {destinations.map((dest) => (
-              <option key={dest._id} value={dest._id}>
-                {dest.name}
-              </option>
-            ))}
-          </select>
-        </div>
+          {/* Languages */}
+          <div className="form-group row mt-4">
+            <label className="col-sm-2 col-form-label">Languages</label>
+            <div className="col-sm-10">
+              <div className="row">
+                {languageOptions.map((lang, idx) => (
+                  <div className="col-md-3 col-sm-4" key={idx}>
+                    <div className="form-check">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        value={lang}
+                        checked={formData.languages.includes(lang)}
+                        onChange={(e) => handleCheckboxChange(e, 'languages')}
+                      />
+                      <label className="form-check-label">{lang}</label>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
 
-        {/* Submit Button */}
-        <button type="submit" className="btn btn-primary btn-block">
-          Submit
-        </button>
-      </form>
+          {/* Availability */}
+          <div className="form-group row mt-4">
+            <label className="col-sm-2 col-form-label">Availability</label>
+            <div className="col-sm-10">
+              <div className="row">
+                {availabilityOptions.map((slot, idx) => (
+                  <div className="col-md-3 col-sm-4" key={idx}>
+                    <div className="form-check">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        value={slot}
+                        checked={formData.availability.includes(slot)}
+                        onChange={(e) => handleCheckboxChange(e, 'availability')}
+                      />
+                      <label className="form-check-label">{slot}</label>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Price */}
+          <div className="form-group row mt-4">
+            <label className="col-sm-2 col-form-label">Price</label>
+            <div className="col-sm-10">
+              <input
+                type="number"
+                name="price"
+                className="form-control"
+                value={formData.price}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+          </div>
+
+          {/* City */}
+          <div className="form-group row mt-4">
+            <label className="col-sm-2 col-form-label">City</label>
+            <div className="col-sm-10">
+              <select
+                name="city"
+                className="form-control"
+                value={formData.city}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Select a city</option>
+                {cityOptions.map((city, idx) => (
+                  <option key={idx} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Submit */}
+          <div className="form-group mt-4 text-center">
+            <button type="submit" className="btn btn-primary w-50">
+              Submit
+            </button>
+          </div>
+
+        </form>
+      </div>
     </div>
   );
 }
