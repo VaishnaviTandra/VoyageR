@@ -1,0 +1,44 @@
+.glass-buttons {
+    display: flex;
+    justify-content: flex; /* Align buttons to the right */
+    gap: 1rem; /* Space between buttons */
+    padding: 1rem; /* Optional: adds spacing from the container edge */
+    margin-left: 210px;
+    
+  }
+  
+  
+  .glass-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .glass-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Optional variants */
+  .glass-btn.primary {
+    background-color: rgba(0, 123, 255, 0.2);
+  }
+  
+  .glass-btn.primary:hover {
+    background-color: rgba(0, 123, 255, 0.3);
+  }
+  
+  .glass-btn.secondary {
+    background-color: rgba(108, 117, 125, 0.2);
+  }
+  
+  .glass-btn.secondary:hover {
+    background-color: rgba(108, 117, 125, 0.3);
+  }
+  

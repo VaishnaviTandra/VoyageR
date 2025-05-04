@@ -1,97 +1,103 @@
-import { useContext, useEffect, useState } from 'react'
-import { UserGuideContextobj } from '../../contexts/UserGuidecontext'
-import { useUser } from '@clerk/clerk-react'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { useContext, useEffect, useState } from 'react';
+import { UserGuideContextobj } from '../../contexts/UserGuidecontext';
+import { useUser } from '@clerk/clerk-react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import '../../styles/Home.css'
+
 
 function Home() {
-  const { currentUser, setCurrentUser } = useContext(UserGuideContextobj)
-  const { isSignedIn, user, isLoaded } = useUser()
-  const [error, setError] = useState("")
-  const navigate = useNavigate()
+  const { currentUser, setCurrentUser } = useContext(UserGuideContextobj);
+  const { isSignedIn, user, isLoaded } = useUser();
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  // Load Clerk user data and auto-assign admin role if email matches
   useEffect(() => {
     if (isLoaded && user) {
-      const userEmail = user.emailAddresses[0].emailAddress
-      const isAdmin = userEmail === 'vaishnavitandra17@gmail.com'
+      const userEmail = user.emailAddresses[0].emailAddress;
+      const isAdmin = userEmail === 'vaishnavitandra17@gmail.com';
 
       setCurrentUser(prev => ({
         ...prev,
         username: user.fullName || `${user.firstName}_${user.lastName}`,
         email: userEmail,
         profileImgUrl: user.imageUrl,
-        role: isAdmin ? 'admin' : '', // auto assign admin role
-      }))
+        role: isAdmin ? 'admin' : '',
+      }));
 
       if (isAdmin) {
-        // Admin route
-        navigate(`/admin-profile/${userEmail}`)
+        navigate(`/admin-profile/${userEmail}`);
       }
     }
-  }, [isLoaded])
+  }, [isLoaded, user, setCurrentUser, navigate]);
 
-  // Handle role selection
   async function onSelectRole(e) {
-    setError('')
-    const {profileImageUrl,isActive,...modifiedUser}=currentUser
-    const selectedRole = e.target.value
-    const updatedUser = { ...modifiedUser, role: selectedRole }
-    console.log("Selected Role:",selectedRole)
-    console.log("Updated User:",updatedUser)
+    setError('');
+    const { profileImageUrl, isActive, ...modifiedUser } = currentUser;
+    const selectedRole = e.target.value;
+    const updatedUser = { ...modifiedUser, role: selectedRole };
+
     try {
-      let res = null
+      let res = null;
       if (selectedRole === 'guide') {
-        res = await axios.post('http://localhost:3000/guide-api/guides', updatedUser)
+        res = await axios.post('http://localhost:3000/guide-api/guides', updatedUser);
       } else if (selectedRole === 'traveler') {
-        res = await axios.post('http://localhost:3000/user-api/users', updatedUser)
+        res = await axios.post('http://localhost:3000/user-api/users', updatedUser);
       }
 
-      const { message, payload } = res.data
-      console.log(payload)
+      const { message, payload } = res.data;
       if (message === selectedRole) {
-        setCurrentUser(payload)
-        localStorage.setItem("currentUser", JSON.stringify(payload))
+        setCurrentUser(payload);
+        localStorage.setItem("currentUser", JSON.stringify(payload));
       } else {
-        setError(message)
+        setError(message);
       }
     } catch (err) {
-      setError(err.response?.data?.message || err.message || "Something went wrong")
+      setError(err.response?.data?.message || err.message || "Something went wrong");
     }
   }
 
-  // Navigate to guide/traveler profile after role is set
   useEffect(() => {
     if (currentUser?.role === "traveler" && !error) {
-      navigate(`/user-profile/${currentUser.email}`)
+      navigate(`/user-profile/${currentUser.email}`);
     }
     if (currentUser?.role === "guide" && !error) {
-      navigate(`/guide-profile/${currentUser.email}`)
+      navigate(`/guide-profile/${currentUser.email}`);
     }
-  }, [currentUser])
+  }, [currentUser, error, navigate]);
 
   return (
-    <div className='container'>
+    <div className='glass-hero'>
       {!isSignedIn && (
-        <div>
-          <h2 className="text-center mt-5">Welcome to VoyageR</h2>
-          <p className="lead text-center">
-            Discover destinations, connect with local guides, and explore the world your way.
+        <div className="glass-card text-center">
+          <h1><span className="highlight text-light">VoyageR</span></h1>
+          <p className="subtitle text-light fs-4">
+          <p>Discover destinations like never before.</p>
+          Connect with local guides and unlock authentic experiences around the world.
           </p>
+          <div className="glass-buttons">
+            <button className="glass-btn primary">Get Started</button>
+            <button className="glass-btn secondary">How it works?</button>
+          </div>
         </div>
       )}
 
       {isSignedIn && currentUser?.role !== 'admin' && (
-        <div>
-          <div className='d-flex justify-content-evenly align-items-center bg-light p-3 rounded shadow-sm mt-4'>
+        <div className='container mt-5'>
+          <div className='d-flex justify-content-evenly align-items-center p-4 rounded text-light'  // Increased padding from p-3 to p-4
+          style={{backgroundColor: 'transparent', boxShadow: '0 4px 10px rgba(0, 123, 255, 0.6), 0 4px 20px rgba(0, 123, 255, 0.3)', // Colorful shadow effect
+          }}
+            >
             <img src={user.imageUrl} width="100px" className='rounded-circle' alt="profile" />
-            <div>
-              <h4>{user.firstName}</h4>
-              <p>{user.emailAddresses[0].emailAddress}</p>
-            </div>
+              <div>
+                  <div className="d-flex justify-content-evenly text-light" style={{ gap: '10px' }}>
+                  <h4>{user.firstName}</h4>
+                  <h4>{user.lastName}</h4>
+              </div>
+            <p>{user.emailAddresses[0].emailAddress}</p>
           </div>
-
-          <div className="text-center mt-4">
+        </div>
+        <div className="text-center mt-4">
             <p className="lead fw-bold">Select your role to continue</p>
             {error && <p className="text-danger">{error}</p>}
             <div className='d-flex justify-content-center gap-5'>
@@ -120,9 +126,10 @@ function Home() {
             </div>
           </div>
         </div>
+        
       )}
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;

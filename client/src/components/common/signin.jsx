@@ -1,13 +1,13 @@
 import React from 'react'
 import { SignIn } from '@clerk/clerk-react'
-function signin() {
+import '../../styles/Signin.css'  // Custom CSS for styling
+
+function Signin() {
   return (
-    <div className='justify-content-center align-items-center'>
-      <div style={{width:"400px"}}>
-      <SignIn/>
-      </div>
+    <div className="signin-container">
+      <SignIn />
     </div>
   )
 }
 
-export default signin
+export default Signin
