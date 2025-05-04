@@ -12,39 +12,47 @@ const DestinationById = () => {
   const [isVRMode, setIsVRMode] = useState(false);
 
   useEffect(() => {
-    const fetchDestination = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:3000/admin-api/admin/destination/${id}`);
-        setDestination(response.data.payload);
+
+        // 1. Fetch destination details from API
+        const apiResponse = await axios.get(`/api/destinations/${id}`);
+        const destinationData = apiResponse.data.payload;
+
+        // 2. Fetch 3D view URL from local jantar-mantar.json
+        let threeDViewUrl = null;
+        try {
+          const jsonResponse = await axios.get("/jantar-mantar.json");
+          threeDViewUrl = jsonResponse.data.payload?.threeDViewUrl || null;
+        } catch (jsonErr) {
+          console.warn("No local 3D data found, skipping");
+        }
+
+        // 3. Combine data
+        setDestination({ ...destinationData, threeDViewUrl });
         setError(null);
       } catch (err) {
         console.error(err);
-        setError("Failed to load destination details");
+        setError("Failed to load destination details.");
       } finally {
         setLoading(false);
       }
     };
 
-    if (id) fetchDestination();
+    fetchData();
   }, [id]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && isVRMode) {
-      import('aframe').then(() => {
-        console.log("A-Frame loaded successfully");
-      }).catch(err => {
-        setIsVRMode(false);
-        setError("Failed to load VR viewer. Please try again.");
-      });
+    if (typeof window !== "undefined" && isVRMode) {
+      import("aframe")
+        .then(() => console.log("A-Frame loaded"))
+        .catch(() => {
+          setIsVRMode(false);
+          setError("Failed to load VR viewer.");
+        });
     }
   }, [isVRMode]);
-
-  useEffect(() => {
-    if (destination) {
-      console.log("Updated destination name:", destination.nameOfDestination);
-    }
-  }, [destination]);
 
   const goToNextImage = () => {
     if (destination?.images?.length > 0) {
@@ -58,7 +66,7 @@ const DestinationById = () => {
     }
   };
 
-  const toggleVRMode = () => setIsVRMode(prev => !prev);
+  const toggleVRMode = () => setIsVRMode((prev) => !prev);
 
   if (loading) {
     return (
@@ -81,7 +89,7 @@ const DestinationById = () => {
       <h1 className="mb-4">{destination.nameOfDestination}</h1>
 
       <div className="mb-4 position-relative">
-        <div className={`border rounded ${isVRMode ? 'vh-100' : 'vh-50'}`} style={{ overflow: "hidden" }}>
+        <div className={`border rounded ${isVRMode ? "vh-100" : "vh-50"}`} style={{ overflow: "hidden" }}>
           {destination.images?.length > 0 ? (
             isVRMode ? (
               <div className="w-100 h-100">
@@ -174,6 +182,19 @@ const DestinationById = () => {
           )}
         </div>
       </div>
+
+      {destination.threeDViewUrl && (
+        <div className="my-3">
+          <a
+            href={destination.threeDViewUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-outline-success"
+          >
+            View 3D on Google Maps
+          </a>
+        </div>
+      )}
 
       <div className="mb-4">
         <div className="d-flex justify-content-between align-items-center mb-2">

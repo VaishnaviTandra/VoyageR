@@ -1,0 +1,16 @@
+{
+    "payload": {
+      "nameOfDestination": "Jantar Mantar",
+      "description": "Jantar Mantar in Jaipur is a collection of architectural astronomical instruments built by Maharaja Jai Singh II.",
+      "images": [
+        "https://images.unsplash.com/photo-1602416011654-05dc3a0c722e",
+        "https://images.unsplash.com/photo-1602416011377-b90ea5eb3d34",
+        "https://images.unsplash.com/photo-1602416011365-6e3e4d76ff67"
+      ],
+      "rating": 4.7,
+      "city": "Jaipur",
+      "popularActivities": ["Astronomy", "Heritage Tours", "Photography"],
+      "threeDViewUrl": "https://maps.app.goo.gl/45gmNhErgeDKR6Uy6"
+    }
+  }
+  

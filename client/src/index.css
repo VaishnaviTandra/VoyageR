@@ -47,7 +47,7 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: #a6a7bf;
 }
 button:focus,
 button:focus-visible {
@@ -65,4 +65,67 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+/* Custom Radio Button */
+.custom-radio {
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid #0c1a2a;
+  position: relative;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.custom-radio:checked {
+  background-color: #8aa5c2;
+  border-color: #007bff;
+}
+
+.custom-radio:checked::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 10px;
+  height: 10px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+/* Label Styling */
+.custom-label {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Hover Effects */
+.custom-radio:hover {
+  transform: scale(1.2);
+  border-color: #0056b3;
+}
+
+.custom-label:hover {
+  color: #007bff;
+}
+
+/* Focus Effects for accessibility */
+.custom-radio:focus, .custom-label:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.7);
+}
+
+.custom-radio:checked:hover {
+  transform: scale(1.1);
+}
+
+/* Active State */
+.custom-radio:active {
+  transform: scale(1.1);
 }

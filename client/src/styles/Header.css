@@ -1,0 +1,124 @@
+/* Header.css */
+.glass-navbar {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    position: sticky;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    z-index: 1000;
+  }
+  
+  .nav-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+  
+  .nav-link:hover {
+    color: #00d9ff;
+  }
+  
+  .nav-item {
+    list-style: none;
+    color: aliceblue;
+  }
+  
+  .navbar-logo h3 {
+    color: white;
+  }
+  body {
+    background: url("../assets/travel1.jpg") no-repeat center center fixed;
+    background-size: cover;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.4); /* Adjust the 0.4 to increase or decrease dimness */
+    z-index: -1;
+  }
+  /* Profile Dropdown Styles */
+.profile-dropdown {
+  position: absolute;
+  top: 50px; /* Adjust this value to control the distance below the profile image */
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.6);  /* Transparent dark background */
+  color: white;
+  border-radius: 8px;
+  padding: 10px;
+  width: 250px;  /* Increased width */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.profile-dropdown .profile-details {
+  margin-bottom: 10px;
+}
+
+.profile-dropdown .btn {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 8px;
+  background-color: transparent;
+  border: 2px solid #007bff; /* Blue border for Sign Out */
+  color: #007bff;  /* Blue text color */
+}
+
+.profile-dropdown .btn:hover {
+  background-color: #007bff;
+  color: white;
+  border: 2px solid #007bff;
+}
+
+.profile-dropdown .btn:focus {
+  outline: none;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Optional: Smooth transition for the dropdown */
+.profile-dropdown {
+  transition: opacity 0.2s ease-in-out;
+}
+/* Style the Destinations Link with 'des-link' */
+.des-link {
+  font-size: 16px;
+  font-weight: bold;
+  color: white;  /* White text color by default */
+  text-decoration: none;  /* Remove underline */
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.des-link:hover {
+  color: #007bff;  /* Blue text color on hover */
+  background-color: transparent;  /* Transparent background on hover */
+  transform: translateY(-3px);  /* Slight upward movement on hover */
+}
+
+.des-link:focus, .des-link:active {
+  outline: none;  /* Remove focus and active outline */
+  text-decoration: none !important;  /* Ensure no underline is visible when clicked or focused */
+}

@@ -1,0 +1,73 @@
+/* Center the signin form */
+.signin-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align items to the top */
+    height: 100vh; /* Full height of the viewport */
+    position: relative;
+    margin: 0; /* Remove default margin */
+    padding-top: 30px; /* Add padding to move it down from the top */
+  }
+  
+  /* Target Clerk's SignIn card to make its background transparent */
+  .cl-sign-in {
+    background-color: transparent !important; /* Make the background transparent */
+    border-radius: 15px !important; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important; /* Soft shadow effect */
+    padding: 30px !important; /* Padding for the form */
+    width: 400px !important; /* Fix width */
+    max-width: 100%;
+    position: relative;
+    z-index: 1;
+    margin-top: 0 !important; /* Remove top margin */
+    margin-bottom: 0 !important; /* Remove bottom margin */
+    border: none !important; /* Remove default border */
+  }
+  
+  /* Remove white background for the card's content container */
+  .cl-sign-in > div {
+    background-color: transparent !important; /* Make internal content area transparent */
+    padding: 0 !important; /* Remove any default padding inside */
+  }
+  
+  /* Optional: If you want the input fields to have a transparent background */
+  .cl-sign-in .cl-input {
+    background-color: transparent !important; /* Transparent input background */
+    color: #333 !important; /* Dark text for readability */
+    border: 1px solid #ccc !important; /* Light border */
+  }
+  
+  /* Submit button inside the Clerk SignIn component */
+  .cl-button {
+    background-color: rgba(0, 123, 255, 0.7) !important; /* Semi-transparent button */
+    color: white !important;
+    padding: 10px 15px;
+    border-radius: 8px;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .cl-button:hover {
+    background-color: rgba(0, 86, 179, 0.7) !important;
+  }
+  
+  /* Links inside the Clerk SignIn component */
+  .cl-link {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .cl-link:hover {
+    text-decoration: underline;
+  }
+  
+  /* Optional: Styling for the footer section of Clerk SignIn */
+  .cl-sign-in .cl-footer {
+    background-color: transparent !important;
+    color: #888 !important;
+  }
+.signup-b{
+    margin-left: 100px;
+}  
