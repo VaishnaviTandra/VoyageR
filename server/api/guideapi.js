@@ -10,10 +10,30 @@ guideApp.get('/guides', expressAsyncHandler(async (req, res) => {
 }));
 
 // Get guides by destination
-guideApp.get('/guides/destination/:destinationId', expressAsyncHandler(async (req, res) => {
-    const guides = await Guide.find({ destination: req.params.destinationId, role: 'guide' });
-    res.status(200).send({ message: "Guides Retrieved", payload: guides });
+guideApp.get('/guide/bycity/:city', expressAsyncHandler(async (req, res) => {
+  const { city } = req.params;
+
+  let allGuides;
+
+  if (city === 'All') {
+    // Get all guides with role 'guide'
+    allGuides = await UserGuide.find({ role: 'guide' });
+  } else {
+    // Get all guides, then filter manually for those that have at least one guide entry with matching city
+    const allGuideDocs = await Guide.find({ role: 'guide' });
+
+    allGuides = allGuideDocs.filter(user =>
+      user.guides.some(g => g.city.toLowerCase() === city.toLowerCase())
+    );
+  }
+  console.log(allGuides)
+
+  res.status(200).send({
+    message: 'Guides available in city',
+    payload: allGuides
+  });
 }));
+
 
 guideApp.post('/guides', expressAsyncHandler(async (req, res) => {
   const guideData = req.body;

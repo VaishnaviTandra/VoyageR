@@ -198,8 +198,6 @@ const DestinationById = () => {
           </div>
         )}
       </div>
-
-      <button className="btn btn-outline-primary">Explore Nearby Hotels...</button>
     </div>
   );
 };

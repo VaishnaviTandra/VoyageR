@@ -21,6 +21,7 @@ import Guidedetails from './components/guide/guidedetails.jsx';
 import Cities from './components/common/Destinations/Cities.jsx';
 import CityById from './components/common/Destinations/CityById.jsx';
 import Hotels from './components/common/Destinations/Hotels.jsx';
+import ViewguidesbyCity from './components/guide/ViewguidesbyCity.jsx';
 const browserRouterObj = createBrowserRouter([
   {
     path: '',
@@ -60,6 +61,9 @@ const browserRouterObj = createBrowserRouter([
       },{
         path:'hotelbyid/:id',
         element:<HotelById/>
+      },{
+        path:'guides',
+        element:<ViewguidesbyCity/>
       },
 
       // ✅ User profile route

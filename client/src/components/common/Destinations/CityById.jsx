@@ -6,7 +6,7 @@ const citiesData = [
   {
     id: 1,
     name: 'Delhi',
-    image: 'https://source.unsplash.com/1000x600/?delhi',
+    image: 'https://i.ytimg.com/vi/l-5rGi8_A_4/maxresdefault.jpg',
     description: [
       'Delhi, the capital city of India, is known for its rich cultural heritage, magnificent monuments, and bustling markets.',
       'The city blends ancient traditions with modernity seamlessly, housing landmarks like the Red Fort, India Gate, and Qutub Minar.',
@@ -16,7 +16,7 @@ const citiesData = [
   {
     id: 2,
     name: 'Mumbai',
-    image: 'https://source.unsplash.com/1000x600/?mumbai',
+    image: 'https://i.ytimg.com/vi/OH4gbDXUMAQ/maxresdefault.jpg',
     description: [
       'Mumbai, often called the "City of Dreams," is the financial, commercial, and entertainment capital of India.',
       'It is home to Bollywood, bustling markets, colonial architecture, and scenic beaches like Juhu and Marine Drive.',
@@ -26,7 +26,7 @@ const citiesData = [
   {
     id: 3,
     name: 'Bengaluru',
-    image: 'https://source.unsplash.com/1000x600/?bengaluru',
+    image: 'https://i.ytimg.com/vi/dkt8WmtkFV8/maxresdefault.jpg',
     description: [
       'Bengaluru, also known as Bangalore, is India\'s tech hub, famous for its pleasant weather and cosmopolitan culture.',
       'It boasts beautiful gardens like Lalbagh, modern malls, vibrant pubs, and a thriving startup ecosystem.',
@@ -36,7 +36,7 @@ const citiesData = [
   {
     id: 4,
     name: 'Hyderabad',
-    image: 'https://source.unsplash.com/1000x600/?hyderabad',
+    image: 'https://i.ytimg.com/vi/EGdQ5QsHlcA/maxresdefault.jpg',
     description: [
       'Hyderabad, the "City of Pearls," is renowned for its rich history, culture, and delectable cuisine.',
       'It is home to landmarks like Charminar, Golconda Fort, and Hussain Sagar Lake.',
@@ -46,7 +46,7 @@ const citiesData = [
   {
     id: 5,
     name: 'Chennai',
-    image: 'https://source.unsplash.com/1000x600/?chennai',
+    image: 'https://i.ytimg.com/vi/mTmOIH79kI0/maxresdefault.jpg',
     description: [
       'Chennai, the gateway to South India, is famous for its beaches, temples, and classical music and dance traditions.',
       'Marina Beach, Kapaleeshwarar Temple, and Fort St. George are some must-visit attractions.',
@@ -56,7 +56,7 @@ const citiesData = [
   {
     id: 6,
     name: 'Kolkata',
-    image: 'https://source.unsplash.com/1000x600/?kolkata',
+    image: 'https://tse2.mm.bing.net/th?id=OIP.eAd69m6r88Gd4xNikSN0mQHaDt&pid=Api&P=0&h=180',
     description: [
       'Kolkata, the "City of Joy," is known for its rich literary, artistic, and revolutionary heritage.',
       'Iconic landmarks include Victoria Memorial, Howrah Bridge, and Indian Museum.',
@@ -66,7 +66,7 @@ const citiesData = [
   {
     id: 7,
     name: 'Pune',
-    image: 'https://source.unsplash.com/1000x600/?pune',
+    image: 'https://www.movingsolutions.in/assets/images/pune-city.jpg',
     description: [
       'Pune is a vibrant city known for its academic institutions, cultural heritage, and pleasant weather.',
       'It offers attractions like Shaniwar Wada, Aga Khan Palace, and nearby hill stations like Lonavala.',
@@ -76,7 +76,7 @@ const citiesData = [
   {
     id: 8,
     name: 'Ahmedabad',
-    image: 'https://source.unsplash.com/1000x600/?ahmedabad',
+    image: 'https://i.ytimg.com/vi/xdZFacSYPBE/maxresdefault.jpg',
     description: [
       'Ahmedabad is Gujarat\'s largest city, rich in history, culture, and architecture.',
       'Notable sites include Sabarmati Ashram, Adalaj Stepwell, and the vibrant Kankaria Lake.',
@@ -86,7 +86,7 @@ const citiesData = [
   {
     id: 9,
     name: 'Jaipur',
-    image: 'https://source.unsplash.com/1000x600/?jaipur',
+    image: 'https://www.travelstart.co.za/blog/wp-content/uploads/2019/08/Jaipur-47.jpg',
     description: [
       'Jaipur, the "Pink City," is known for its majestic palaces, forts, and vibrant bazaars.',
       'Amber Fort, City Palace, and Hawa Mahal showcase the city\'s royal history.',
@@ -96,7 +96,7 @@ const citiesData = [
   {
     id: 10,
     name: 'Lucknow',
-    image: 'https://source.unsplash.com/1000x600/?lucknow',
+    image: 'https://tse4.mm.bing.net/th?id=OIP.AT1_2BJYZYYXBSFl9xZcQAHaDi&pid=Api&P=0&h=180',
     description: [
       'Lucknow, the city of Nawabs, is famous for its sophisticated manners, poetry, and delicious cuisine.',
       'Bara Imambara, Rumi Darwaza, and the vibrant Hazratganj market are must-visits.',
@@ -106,7 +106,7 @@ const citiesData = [
   {
     id: 11,
     name: 'Varanasi',
-    image: 'https://source.unsplash.com/1000x600/?varanasi',
+    image: 'https://tse4.mm.bing.net/th?id=OIP.QUO0NhkZIOV4UCeUMhgF7AHaFj&pid=Api&P=0&h=180',
     description: [
       'Varanasi, one of the world\'s oldest living cities, is a spiritual center situated on the banks of the Ganges.',
       'Famous for its ghats, temples, and spiritual experiences, the Ganga Aarti is a must-see spectacle.',
@@ -116,7 +116,7 @@ const citiesData = [
   {
     id: 12,
     name: 'Goa',
-    image: 'https://source.unsplash.com/1000x600/?goa',
+    image: 'https://i.ytimg.com/vi/u8vgfFvTcIE/maxresdefault.jpg',
     description: [
       'Goa is India\'s favorite beach destination known for its scenic beaches, nightlife, and Portuguese heritage.',
       'Famous spots include Baga Beach, Fort Aguada, and old Goa churches.',
@@ -126,7 +126,7 @@ const citiesData = [
   {
     id: 13,
     name: 'Amritsar',
-    image: 'https://source.unsplash.com/1000x600/?amritsar',
+    image: 'https://sacredsites.com/images/asia/india/golden_temple_600.jpg',
     description: [
       'Amritsar, home to the Golden Temple, is a spiritual and cultural center of Sikhism.',
       'Witness the serene beauty of Harmandir Sahib and the patriotic fervor at Wagah Border.',
@@ -136,7 +136,7 @@ const citiesData = [
   {
     id: 14,
     name: 'Shimla',
-    image: 'https://source.unsplash.com/1000x600/?shimla',
+    image: 'https://tse3.mm.bing.net/th?id=OIP.PlNQ75jWkAaNHVY5i4Q9nQHaDj&pid=Api&P=0&h=180',
     description: [
       'Shimla, the "Queen of Hills," is a popular hill station known for its colonial architecture and scenic beauty.',
       'Attractions include Mall Road, Christ Church, and Jakhoo Temple.',
@@ -146,7 +146,7 @@ const citiesData = [
   {
     id: 15,
     name: 'Udaipur',
-    image: 'https://source.unsplash.com/1000x600/?udaipur',
+    image: 'https://tse1.mm.bing.net/th?id=OIP.3nPWZiAW9UUD8ga7MBx3YQHaEo&pid=Api&P=0&h=180',
     description: [
       'Udaipur, the "City of Lakes," is famous for its romantic charm, palaces, and lakes.',
       'City Palace, Lake Pichola, and Jag Mandir offer a glimpse into royal Rajasthan.',
