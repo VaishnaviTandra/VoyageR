@@ -157,15 +157,7 @@ const HotelById = () => {
           <small className="text-muted">
             {hotel.images?.length > 0 ? `Image ${currentImageIndex + 1} of ${hotel.images.length}` : "No images"}
           </small>
-          {hotel.images?.length > 0 && (
-            <button
-              className={`btn ${isVRMode ? "btn-primary" : "btn-outline-secondary"} btn-sm d-flex align-items-center`}
-              onClick={toggleVRMode}
-            >
-              <Compass size={16} className="me-1" />
-              {isVRMode ? "Exit 3D Gallery" : "View in 3D Gallery"}
-            </button>
-          )}
+          
         </div>
       </div>
 

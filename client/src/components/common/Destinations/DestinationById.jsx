@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { ChevronLeft, ChevronRight, Compass } from "lucide-react";
+import Viewer from "photo-sphere-viewer";
+import "photo-sphere-viewer/dist/photo-sphere-viewer.css";
 
 const DestinationById = () => {
   const { id } = useParams();
@@ -9,50 +11,41 @@ const DestinationById = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isVRMode, setIsVRMode] = useState(false);
+  const [show3DGallery, setShow3DGallery] = useState(false);
+  const viewerRef = useRef(null);
+  const containerRef = useRef(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchDestination = async () => {
       try {
         setLoading(true);
-
-        // 1. Fetch destination details from API
-        const apiResponse = await axios.get(`/api/destinations/${id}`);
-        const destinationData = apiResponse.data.payload;
-
-        // 2. Fetch 3D view URL from local jantar-mantar.json
-        let threeDViewUrl = null;
-        try {
-          const jsonResponse = await axios.get("/jantar-mantar.json");
-          threeDViewUrl = jsonResponse.data.payload?.threeDViewUrl || null;
-        } catch (jsonErr) {
-          console.warn("No local 3D data found, skipping");
-        }
-
-        // 3. Combine data
-        setDestination({ ...destinationData, threeDViewUrl });
+        const response = await axios.get(`http://localhost:3000/admin-api/admin/destination/${id}`);
+        setDestination(response.data.payload);
         setError(null);
       } catch (err) {
         console.error(err);
-        setError("Failed to load destination details.");
+        setError("Failed to load destination details");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    if (id) fetchDestination();
   }, [id]);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && isVRMode) {
-      import("aframe")
-        .then(() => console.log("A-Frame loaded"))
-        .catch(() => {
-          setIsVRMode(false);
-          setError("Failed to load VR viewer.");
-        });
+    if (show3DGallery && destination?.images?.[currentImageIndex]) {
+      viewerRef.current = new Viewer({
+
+        container: containerRef.current,
+        panorama: destination.images[currentImageIndex],
+        navbar: ["zoom", "fullscreen"],
+      });
     }
-  }, [isVRMode]);
+    return () => {
+      if (viewerRef.current) viewerRef.current.destroy();
+    };
+  }, [show3DGallery, currentImageIndex, destination]);
 
   const goToNextImage = () => {
     if (destination?.images?.length > 0) {
@@ -65,8 +58,6 @@ const DestinationById = () => {
       setCurrentImageIndex((prev) => (prev - 1 + destination.images.length) % destination.images.length);
     }
   };
-
-  const toggleVRMode = () => setIsVRMode((prev) => !prev);
 
   if (loading) {
     return (
@@ -89,75 +80,34 @@ const DestinationById = () => {
       <h1 className="mb-4">{destination.nameOfDestination}</h1>
 
       <div className="mb-4 position-relative">
-        <div className={`border rounded ${isVRMode ? "vh-100" : "vh-50"}`} style={{ overflow: "hidden" }}>
+        <div className="border rounded" style={{ overflow: "hidden", height: "400px" }}>
           {destination.images?.length > 0 ? (
-            isVRMode ? (
-              <div className="w-100 h-100">
-                <a-scene embedded>
-                  <a-assets>
-                    {destination.images.map((img, index) => (
-                      <img key={index} id={`img-${index}`} src={img} crossOrigin="anonymous" />
-                    ))}
-                  </a-assets>
-
-                  <a-entity>
-                    <a-curvedimage
-                      src={`#img-${currentImageIndex}`}
-                      height="3"
-                      radius="3"
-                      theta-length="180"
-                      position="0 1.6 0"
-                      rotation="0 90 0"
-                    ></a-curvedimage>
-                  </a-entity>
-
-                  <a-sky color="#333"></a-sky>
-
-                  <a-camera position="0 1.6 0" look-controls>
-                    <a-cursor color="#FFFFFF"></a-cursor>
-                  </a-camera>
-
-                  <a-entity position="-2 1.6 -1">
-                    <a-box color="#333" depth="0.1" height="0.3" width="0.3" onClick={goToPreviousImage}>
-                      <a-text value="<" align="center" position="0 0 0.06" scale="0.5 0.5 0.5" color="#FFF" />
-                    </a-box>
-                  </a-entity>
-
-                  <a-entity position="2 1.6 -1">
-                    <a-box color="#333" depth="0.1" height="0.3" width="0.3" onClick={goToNextImage}>
-                      <a-text value=">" align="center" position="0 0 0.06" scale="0.5 0.5 0.5" color="#FFF" />
-                    </a-box>
-                  </a-entity>
-                </a-scene>
-              </div>
-            ) : (
-              <div className="position-relative">
-                <img
-                  src={destination.images[currentImageIndex]}
-                  alt={`Image ${currentImageIndex + 1}`}
-                  className="img-fluid w-100"
-                  style={{ objectFit: "cover", height: "400px" }}
-                />
-                {destination.images.length > 1 && (
-                  <>
-                    <button
-                      onClick={goToPreviousImage}
-                      className="btn btn-dark position-absolute top-50 start-0 translate-middle-y"
-                      style={{ zIndex: 10 }}
-                    >
-                      <ChevronLeft size={24} />
-                    </button>
-                    <button
-                      onClick={goToNextImage}
-                      className="btn btn-dark position-absolute top-50 end-0 translate-middle-y"
-                      style={{ zIndex: 10 }}
-                    >
-                      <ChevronRight size={24} />
-                    </button>
-                  </>
-                )}
-              </div>
-            )
+            <div className="position-relative">
+              <img
+                src={destination.images[currentImageIndex]}
+                alt={`Image ${currentImageIndex + 1}`}
+                className="img-fluid w-100"
+                style={{ objectFit: "cover", height: "400px" }}
+              />
+              {destination.images.length > 1 && (
+                <>
+                  <button
+                    onClick={goToPreviousImage}
+                    className="btn btn-dark position-absolute top-50 start-0 translate-middle-y"
+                    style={{ zIndex: 10 }}
+                  >
+                    <ChevronLeft size={24} />
+                  </button>
+                  <button
+                    onClick={goToNextImage}
+                    className="btn btn-dark position-absolute top-50 end-0 translate-middle-y"
+                    style={{ zIndex: 10 }}
+                  >
+                    <ChevronRight size={24} />
+                  </button>
+                </>
+              )}
+            </div>
           ) : (
             <div className="d-flex justify-content-center align-items-center bg-light" style={{ height: "400px" }}>
               <p className="text-muted">No images available</p>
@@ -171,30 +121,30 @@ const DestinationById = () => {
               ? `Image ${currentImageIndex + 1} of ${destination.images.length}`
               : "No images"}
           </small>
-          {destination.images?.length > 0 && (
-            <button
-              className={`btn ${isVRMode ? "btn-primary" : "btn-outline-secondary"} btn-sm d-flex align-items-center`}
-              onClick={toggleVRMode}
+          {destination.city && (
+            <a
+              className="btn btn-outline-secondary btn-sm d-flex align-items-center"
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(destination.nameOfDestination + ', ' + destination.city)}`}
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <Compass size={16} className="me-1" />
-              {isVRMode ? "Exit 3D Gallery" : "View in 3D Gallery"}
-            </button>
+              View on Google Maps
+            </a>
           )}
         </div>
-      </div>
 
-      {destination.threeDViewUrl && (
-        <div className="my-3">
-          <a
-            href={destination.threeDViewUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-outline-success"
-          >
-            View 3D on Google Maps
-          </a>
-        </div>
-      )}
+        {destination.images?.length > 0 && (
+          <div className="mt-2 text-end">
+            <button
+              className="btn btn-outline-primary btn-sm"
+              onClick={() => setShow3DGallery(true)}
+            >
+              View in 3D Gallery
+            </button>
+          </div>
+        )}
+      </div>
 
       <div className="mb-4">
         <div className="d-flex justify-content-between align-items-center mb-2">
@@ -219,6 +169,21 @@ const DestinationById = () => {
           </div>
         )}
       </div>
+
+      {/* 3D Gallery Overlay */}
+      {show3DGallery && (
+        <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-flex justify-content-center align-items-center z-3">
+          <div className="position-relative bg-white rounded shadow" style={{ width: "80%", height: "80%" }}>
+            <button
+              onClick={() => setShow3DGallery(false)}
+              className="btn btn-danger position-absolute top-0 end-0 m-3"
+            >
+              Close
+            </button>
+            <div ref={containerRef} style={{ width: "100%", height: "100%" }} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
