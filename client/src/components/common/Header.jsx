@@ -54,7 +54,7 @@ function Header() {
           </ul>
         ) : (
           <div className="d-flex align-items-center text-light">
-           <Link to="destinations" className="des-link me-3"> Destinations </Link>
+           <Link to="cities" className="des-link me-3"> Cities </Link>
 
 
             {/* Profile Section */}
