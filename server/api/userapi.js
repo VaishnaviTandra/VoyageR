@@ -51,4 +51,20 @@ userApp.get('/user-bookings/:userId',async(req,res)=>{
     res.status(500).json({ message: "Error fetching bookings", error: err.message });
   }
 })
+// PUT /block-status/:id
+userApp.put('/block-status/:id', expressAsyncHandler(async (req, res) => {
+  const { isBlocked } = req.body;
+  const updated = await User.findByIdAndUpdate(
+    req.params.id,
+    { isBlocked },
+    { new: true }
+  );
+
+  if (!updated) {
+    return res.status(404).send({ message: 'User/Guide not found' });
+  }
+
+  res.status(200).send({ message: `User ${isBlocked ? 'blocked' : 'unblocked'} successfully`, payload: updated });
+}));
+
 module.exports = userApp;
