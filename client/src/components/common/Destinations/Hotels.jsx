@@ -64,7 +64,7 @@ function Hotels() {
       <div>
         {error && <p className="text-danger display-4 text-center mt-5">{error}</p>}
 
-        <h2 className="text-center my-4">Hotels in {city}</h2>
+        <h2 className="text-center my-4 text-light">Hotels in {city}</h2>
 
         {isLoading ? (
           <div className="text-center mt-4">
@@ -75,8 +75,8 @@ function Hotels() {
           <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 mb-3">
             {hotels.map((hotelObj, idx) => (
               <div className="col mb-3" key={idx}>
-                <div className="card h-100">
-                  <div className="card-body text-center">
+                <div className="glass-card h-100 p-3 d-flex flex-column justify-content-center">
+  <div className="text-center">
                     <img
                       src={getHotelImage(hotelObj)}
                       alt="Hotel"
@@ -89,7 +89,7 @@ function Hotels() {
                       {hotelObj.rating ? '⭐'.repeat(Math.round(hotelObj.rating)) : '🤷‍♂️'}
                     </p>
                     <button className="btn btn-info mt-2" onClick={() => gotoHotelById(hotelObj)}>
-                      View Details...
+                      View Details
                     </button>
                   </div>
                 </div>

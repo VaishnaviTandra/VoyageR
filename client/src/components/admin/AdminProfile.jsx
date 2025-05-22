@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link,Outlet } from 'react-router-dom'
 import { useState,useEffect } from 'react'
+import '../../styles/Admin.css'
 function AdminProfile() {
   const [isLoading,setIsLoading]=useState(true);
   useEffect(() => {
@@ -19,13 +20,13 @@ function AdminProfile() {
         <div>
          <ul className="d-flex justify-content-around list-unstyled fs-3">
             <li className="nav-item">
-              <Link to="postdestination" className="nav-link  mt-3 box">Manage Destinations</Link>
+              <Link to="postdestination" className="nav-link  mt-3 box btn btn-outline-primary fs-5 px-4 py-2">Manage Destinations</Link>
             </li>
             <li className="nav-item">
-              <Link to="posthotel" className="nav-link  mt-3 box">Manage Hotels</Link>
+              <Link to="posthotel" className="nav-link  mt-3 box btn btn-outline-primary fs-5 px-4 py-2">Manage Hotels</Link>
             </li>
             <li className="nav-item">
-              <Link to="viewuserguides" className="nav-link  mt-3 box">View Users and Guides</Link>
+              <Link to="viewuserguides" className="nav-link  mt-3 box btn btn-outline-primary fs-5 px-4 py-2">View Users and Guides</Link>
             </li>
           </ul>
           <div className="mt-5">

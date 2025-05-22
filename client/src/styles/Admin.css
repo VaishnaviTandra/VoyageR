@@ -1,0 +1,38 @@
+.box {
+  padding: 10px 20px;
+  border: 2px solid #007bff;
+  border-radius: 10px;
+  color: #007bff;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.box:hover {
+  background-color: #007bff;
+  color: white;
+}
+.btn-outline-primary,
+.btn-outline-success,
+.btn-outline-info {
+  color: rgba(255, 255, 255, 0.9) !important;          /* Text: white 90% opacity */
+  border-color: rgba(255, 255, 255, 0.5) !important;   /* Border: white 50% opacity */
+  background-color: rgba(255, 255, 255, 0.1) !important; /* Background: white 10% opacity */
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-success:hover,
+.btn-outline-info:hover {
+  background-color: rgba(255, 255, 255, 0.3) !important; /* Background becomes more opaque */
+  border-color: rgba(255, 255, 255, 0.8) !important;    /* Border becomes more solid */
+  color: rgba(255, 255, 255, 1) !important;             /* Text becomes fully white */
+  cursor: pointer;                                       /* Pointer cursor on hover */
+}
+ul.d-flex {
+  gap: 20px;
+}
+
+.box {
+  margin-top: 1rem; /* keep your mt-3 */
+}
+

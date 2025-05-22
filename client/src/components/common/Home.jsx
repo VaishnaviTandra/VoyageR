@@ -70,13 +70,13 @@ function Home() {
     <div className='glass-hero'>
       {!isSignedIn && (
         <div className="glass-card text-center">
-          <h1><span className="highlight text-light">VoyageR</span></h1>
-          <p className="subtitle text-light fs-4">
-          <p>Discover destinations like never before.</p>
+          <h1><span className="highlight text-light fs-1">VoyageR</span></h1>
+          <p className="subtitle text-light fs-2">
+          <p className="fs-2">Discover destinations like never before.</p>
           Connect with local guides and unlock authentic experiences around the world.
           </p>
-          <div className="glass-buttons">
-            <button className="glass-btn primary">Get Started</button>
+          <div className="glass-buttons ">
+            <button className="glass-btn primary ms-5 me-5">Get Started</button>
             <button className="glass-btn secondary">How it works?</button>
           </div>
         </div>

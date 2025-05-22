@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
+import '../../styles/Guides.css';
 
 function ViewguidesbyCity() {
   const location = useLocation();
@@ -60,23 +61,32 @@ console.log(res.data.payload)
                   .filter((g) => g.city === city)
                   .map((info, index) => (
                     <div className="col mb-3" key={`${guide._id}-${index}`}>
-                      <div className="card ">
+                      <div className="card glass-card custom-card-size">
                         <img
                           src={guide.profileImgUrl || 'https://via.placeholder.com/300x200?text=No+Image'}
                           className="card-img-top"
                           alt="Guide"
                         />
-                        <div className="card-body">
-                          <h5 className="card-title">{guide.firstName} {guide.lastName}</h5>
-                          <p className="card-text">Email: {guide.email}</p>
-                          <p className="card-text">Contact: {guide.contact}</p>
-                          <p className="card-text"><strong>Languages:</strong> {info.languages.join(', ')}</p>
-                          <p className="card-text"><strong>Availability:</strong> {info.availability.join(', ')}</p>
-                          <p className="card-text"><strong>Price:</strong> ₹{info.price}</p>
-                          <button className="btn btn-info" onClick={() => gotoGuideProfile(guide)}>
-                            View Profile
-                          </button>
-                        </div>
+                        <div className="card-body text-warning">
+  <h5 className="card-title fw-bold fs-5 mb-3 mt-3">
+    {guide.firstName} {guide.lastName}
+  </h5>
+  <p className="card-text fw-semibold fs-6 mb-2">Email: {guide.email}</p>
+  <p className="card-text fw-semibold fs-6 mb-2">Contact: {guide.contact}</p>
+  <p className="card-text fw-semibold fs-6 mb-2">
+    <strong>Languages:</strong> {info.languages.join(', ')}
+  </p>
+  <p className="card-text fw-semibold fs-6 mb-2">
+    <strong>Availability:</strong> {info.availability.join(', ')}
+  </p>
+  <p className="card-text fw-semibold fs-6 mb-3">
+    <strong>Price:</strong> ₹{info.price}
+  </p>
+  <button className="btn btn-info fw-bold">
+    View Profile
+  </button>
+</div>
+
                       </div>
                     </div>
                   ))
