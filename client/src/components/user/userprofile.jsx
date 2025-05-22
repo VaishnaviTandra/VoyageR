@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import '../../styles/UserProfile.css' // Ensure you create this file
 
 function UserProfile() {
   const [userStatus, setUserStatus] = useState(null);
@@ -34,53 +35,43 @@ function UserProfile() {
   if (!currentUser) return <p>Loading...</p>;
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="user-profile-container">
       {userStatus ? (
         <div>
-          <p className='text-danger fs-3 fw-semibold'>
+          <p className="text-danger fs-3 fw-semibold">
             Your account is blocked. Please contact Admin.
           </p>
         </div>
       ) : (
         <div>
-          {/* User Info */}
-          <div
-            style={{
-              alignItems: 'center',
-              gap: '20px',
-              background: "#f5f5f5",
-              padding: "20px",
-              borderRadius: "10px",
-              marginBottom: "20px"
-            }}
-          >
-            <div style={{ marginTop: "20px" }}>
-              <div>
-                <label style={{ fontWeight: "bold" }}>Username:</label>
-                <p>{currentUser.username}</p>
-              </div>
-              <div>
-                <label style={{ fontWeight: "bold" }}>Email:</label>
-                <p>{currentUser.email}</p>
-              </div>
+          {/* Glassmorphic User Info */}
+          <div className="glass-card user-info-card">
+            <h3 className="mb-3">User Profile</h3>
+            <div>
+              <label><strong>Username:</strong></label>
+              <p>{currentUser.username}</p>
+            </div>
+            <div>
+              <label><strong>Email:</strong></label>
+              <p>{currentUser.email}</p>
             </div>
           </div>
 
-          {/* Button to View Bookings */}
+          {/* View Bookings Button */}
           {!showBookings && (
-            <button onClick={handleViewBookings} style={{ padding: "10px 20px", fontSize: "16px", cursor: "pointer" }}>
+            <button className="view-bookings-btn" onClick={handleViewBookings}>
               View Recent Hotel Bookings
             </button>
           )}
 
-          {/* Booking Info */}
           {loadingBookings && <p>Loading bookings...</p>}
 
+          {/* Glassmorphic Bookings List */}
           {showBookings && bookings.length > 0 && (
-            <div style={{ marginTop: "30px" }}>
+            <div className="bookings-section">
               <h4>Recent Hotel Bookings</h4>
               {bookings.map((b, i) => (
-                <div key={i} style={{ border: "1px solid #ccc", padding: "15px", marginBottom: "15px", borderRadius: "8px" }}>
+                <div className="glass-card booking-card" key={i}>
                   <h5>{b.hotelName} ({b.location})</h5>
                   <p>Check-In: {new Date(b.checkIn).toLocaleDateString()}</p>
                   <p>Check-Out: {new Date(b.checkOut).toLocaleDateString()}</p>

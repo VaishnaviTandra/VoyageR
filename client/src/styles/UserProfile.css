@@ -1,0 +1,49 @@
+.user-profile-container {
+  padding: 20px;
+  color: white;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 20px;
+  margin-bottom: 20px;
+  color: white;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-3px);
+}
+
+.user-info-card {
+  max-width: 500px;
+}
+
+.view-bookings-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  color: #fff;
+  background-color: rgba(0, 123, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.view-bookings-btn:hover {
+  background-color: rgba(0, 123, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+.bookings-section h4 {
+  margin-bottom: 15px;
+}
+
+.booking-card {
+  max-width: 600px;
+}

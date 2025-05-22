@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { ChevronLeft, ChevronRight, Compass } from "lucide-react";
-import Viewer from "photo-sphere-viewer";
+import { Viewer } from "photo-sphere-viewer";
 import "photo-sphere-viewer/dist/photo-sphere-viewer.css";
 
 const DestinationById = () => {
@@ -36,7 +36,6 @@ const DestinationById = () => {
   useEffect(() => {
     if (show3DGallery && destination?.images?.[currentImageIndex]) {
       viewerRef.current = new Viewer({
-
         container: containerRef.current,
         panorama: destination.images[currentImageIndex],
         navbar: ["zoom", "fullscreen"],
@@ -79,7 +78,8 @@ const DestinationById = () => {
     <div className="container my-4">
       <h1 className="mb-4">{destination.nameOfDestination}</h1>
 
-      <div className="mb-4 position-relative">
+      {/* Image section with glass-card */}
+      <div className="mb-4 position-relative glass-card">
         <div className="border rounded" style={{ overflow: "hidden", height: "400px" }}>
           {destination.images?.length > 0 ? (
             <div className="position-relative">
@@ -146,7 +146,8 @@ const DestinationById = () => {
         )}
       </div>
 
-      <div className="mb-4">
+      {/* About this destination card with glass-card */}
+      <div className="mb-4 glass-card">
         <div className="d-flex justify-content-between align-items-center mb-2">
           <h4 className="mb-0">About this destination</h4>
           {destination.rating && (

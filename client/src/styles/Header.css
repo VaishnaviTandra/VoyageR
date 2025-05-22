@@ -35,15 +35,16 @@
     background-size: cover;
   }
   body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 100vw;
-    background-color: rgba(0, 0, 0, 0.4); /* Adjust the 0.4 to increase or decrease dimness */
-    z-index: -1;
-  }
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.4); /* Darker tint */
+  z-index: -1;
+}
+
   /* Profile Dropdown Styles */
 .profile-dropdown {
   position: absolute;
@@ -122,3 +123,15 @@
   outline: none;  /* Remove focus and active outline */
   text-decoration: none !important;  /* Ensure no underline is visible when clicked or focused */
 }
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 20px;
+  color: white;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+

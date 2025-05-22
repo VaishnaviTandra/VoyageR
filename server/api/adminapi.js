@@ -91,15 +91,18 @@ adminApp.get('/admin/destinations/:category', expressAsyncHandler(async (req, re
       res.status(200).send({ message: "No destinations found for the selected category" });
     }
   }));
-  adminApp.get('/admin/photo', expressAsyncHandler(async (req, res) => {
-    const ref = req.query.ref;
-    if (!ref) return res.status(400).send("Missing photo reference");
+// backend route
+
+adminApp.get('/admin/destination/photo', expressAsyncHandler(async (req, res) => {
+  const ref = req.query.ref;
+  if (!ref) return res.status(400).send("Missing photo reference");
+
+  const photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${ref}&key=${process.env.GOOGLE_API_KEY}`;
   
-    const photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${ref}&key=${process.env.GOOGLE_API_KEY}`;
-    
-    res.redirect(photoUrl);
-  }));
-  
+  res.redirect(photoUrl);
+}));
+
+
 // Get destination by ID
 adminApp.get('/admin/destination/:id', expressAsyncHandler(async (req, res) => {
   const destination = await Destination.findById(req.params.id);
