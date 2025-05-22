@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import '../../styles/GuideProfile.css'; // Ensure correct path
 
 function GuideProfile() {
   const navigate = useNavigate();
@@ -73,7 +74,7 @@ function GuideProfile() {
       alert('Price must be a positive number.');
       return;
     }
-console.log(formData)
+
     const payload = {
       username: formData.username,
       email: formData.email,
@@ -103,11 +104,33 @@ console.log(formData)
   if (!currentUser) return <p>Loading profile...</p>;
 
   return (
-    <div className="container mt-5">
-      <div className="card p-4 shadow">
-        <h2 className="mb-4">Guide Profile</h2>
-        <form onSubmit={handleSubmit}>
+    <div className="container mt-5 guide-profile-container">
+      <div
+  className="card p-4 shadow"
+  style={{ backgroundColor: '#f0f0f0' }}
+>
 
+<div
+  className="d-flex align-items-center mb-4"
+  style={{ marginLeft: '20px' }}  // <- more left margin
+>
+  <img
+    src={formData.profileImgUrl}
+    alt="Profile"
+    style={{
+      width: '90px',
+      height: '90px',
+      objectFit: 'cover',
+      borderRadius: '50%',
+      marginRight: '20px',
+      border: '2px solid #ccc',
+    }}
+  />
+  <h2 className="mb-0 text-center" style={{ marginTop: '10px' }}>Guide Profile</h2>
+</div>
+
+
+        <form onSubmit={handleSubmit}>
           {/* Username */}
           <div className="form-group row">
             <label className="col-sm-2 col-form-label">Name</label>
@@ -136,17 +159,7 @@ console.log(formData)
             </div>
           </div>
 
-          {/* Profile Image */}
-          <div className="form-group row mt-3">
-            <label className="col-sm-2 col-form-label">Profile Image</label>
-            <div className="col-sm-10">
-              {formData.profileImgUrl ? (
-                <img src={formData.profileImgUrl} alt="Profile" width="100" height="100" className="rounded-circle" />
-              ) : (
-                <p>No profile image available</p>
-              )}
-            </div>
-          </div>
+          
 
           {/* Contact */}
           <div className="form-group row mt-3">
@@ -252,7 +265,6 @@ console.log(formData)
               Submit
             </button>
           </div>
-
         </form>
       </div>
     </div>

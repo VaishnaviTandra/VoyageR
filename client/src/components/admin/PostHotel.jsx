@@ -99,8 +99,8 @@ function PostHotel() {
 
       {message && (
         <div className="mt-4 p-4 bg-gray-100 rounded-md">
-          <h2 className="text-lg font-semibold mb-2">Status:</h2>
-          <pre className="whitespace-pre-wrap">{message}</pre>
+          <h2 className="text-lg font-semibold mb-2 text-light">Status:</h2>
+          <pre className="whitespace-pre-wrap text-light">{message}</pre>
         </div>
       )}
     </div>

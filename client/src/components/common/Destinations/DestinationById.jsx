@@ -121,34 +121,36 @@ const DestinationById = () => {
               ? `Image ${currentImageIndex + 1} of ${destination.images.length}`
               : "No images"}
           </small>
-          {destination.city && (
-            <a
-              className="btn btn-outline-secondary btn-sm d-flex align-items-center"
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(destination.nameOfDestination + ', ' + destination.city)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Compass size={16} className="me-1" />
-              View on Google Maps
-            </a>
-          )}
         </div>
 
-        {destination.images?.length > 0 && (
-          <div className="mt-2 text-end">
+        <div className="d-flex gap-2 justify-content-end mt-2">
+          {destination.images?.length > 0 && (
             <button
-              className="btn btn-outline-primary btn-sm"
+              className="btn btn-light px-3 py-1 rounded-2"
+              style={{ fontSize: "0.82rem" }}
               onClick={() => setShow3DGallery(true)}
             >
               View in 3D Gallery
             </button>
-          </div>
-        )}
+          )}
+          {destination.city && (
+            <a
+              className="btn btn-light px-3 py-1 rounded-2 d-flex align-items-center"
+              style={{ fontSize: "0.85rem" }}
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(destination.nameOfDestination + ', ' + destination.city)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Compass size={14} className="me-1" />
+              View on Google Maps
+            </a>
+          )}
+        </div>
       </div>
 
       {/* About this destination card with glass-card */}
-      <div className="mb-4 glass-card">
-        <div className="d-flex justify-content-between align-items-center mb-2">
+      <div className="mb-4 glass-card p-3">
+        <div className="mb-3 d-flex justify-content-center align-items-center gap-3">
           <h4 className="mb-0">About this destination</h4>
           {destination.rating && (
             <span className="badge bg-warning text-dark fs-6">
@@ -156,15 +158,25 @@ const DestinationById = () => {
             </span>
           )}
         </div>
-        <p>{destination.description}</p>
-        {destination.city && <p><strong>Location:</strong> {destination.city}</p>}
+
+        {destination.description && (
+          <p className="text-center fs-5">{destination.description}</p>
+        )}
+
+        {destination.city && (
+          <p className="text-center fs-5">
+            <strong>Location:</strong> {destination.city}
+          </p>
+        )}
 
         {destination.popularActivities?.length > 0 && (
-          <div className="mt-3">
-            <h5>Popular Activities</h5>
-            <div className="d-flex flex-wrap gap-2">
+          <div className="mt-3 text-center">
+            <h5 className="mb-3">Popular Activities</h5>
+            <div className="d-flex justify-content-center flex-wrap gap-2">
               {destination.popularActivities.map((activity, idx) => (
-                <span key={idx} className="badge bg-info text-dark">{activity}</span>
+                <span key={idx} className="badge bg-info text-dark fs-6">
+                  {activity}
+                </span>
               ))}
             </div>
           </div>

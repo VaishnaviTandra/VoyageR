@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { ChevronLeft, ChevronRight, Compass } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const HotelById = () => {
   const { id } = useParams();
@@ -54,6 +54,10 @@ const HotelById = () => {
 
   const toggleVRMode = () => setIsVRMode((prev) => !prev);
 
+  const handleBookNow = () => {
+    alert(`Booking functionality for ${hotel.nameOfHotel} is not implemented yet.`);
+  };
+
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: "200px" }}>
@@ -71,7 +75,36 @@ const HotelById = () => {
   }
 
   return (
-    <div className="container my-4">
+    <div className="container my-4" style={{ color: "white" }}>
+      <style>{`
+        .luxuries-container {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 10px;
+          margin-top: 10px;
+        }
+        .badge {
+          background-color: #28a745 !important;
+          font-weight: 500;
+        }
+        .btn-book-now {
+          background-color: #007bff;
+          border: none;
+          padding: 10px 20px;
+          font-weight: 600;
+          color: white;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+          margin-top: 20px;
+          display: inline-block;
+        }
+        .btn-book-now:hover {
+          background-color: #0056b3;
+        }
+      `}</style>
+
       <h1 className="mb-4">{hotel.nameOfHotel}</h1>
 
       {/* Images and VR Mode */}
@@ -146,7 +179,7 @@ const HotelById = () => {
               </div>
             )
           ) : (
-            <div className="d-flex justify-content-center align-items-center bg-light" style={{ height: "400px" }}>
+            <div className="d-flex justify-content-center align-items-center bg-light" style={{ height: "400px", color: 'black' }}>
               <p className="text-muted">No images available</p>
             </div>
           )}
@@ -154,10 +187,9 @@ const HotelById = () => {
 
         {/* VR Mode Toggle */}
         <div className="d-flex justify-content-between align-items-center mt-2">
-          <small className="text-muted">
+          <small className="text-muted" style={{ color: 'white' }}>
             {hotel.images?.length > 0 ? `Image ${currentImageIndex + 1} of ${hotel.images.length}` : "No images"}
           </small>
-          
         </div>
       </div>
 
@@ -176,9 +208,9 @@ const HotelById = () => {
         <p><strong>Available Rooms:</strong> {hotel.availableRooms}</p>
 
         {hotel.luxuries?.length > 0 && (
-          <div className="mt-3">
+          <div className="mt-3 text-center">
             <h5>Luxuries</h5>
-            <div className="d-flex flex-wrap gap-2">
+            <div className="luxuries-container">
               {hotel.luxuries.map((luxury, idx) => (
                 <span key={idx} className="badge bg-success">{luxury}</span>
               ))}
@@ -209,6 +241,9 @@ const HotelById = () => {
             </ul>
           </div>
         )}
+
+        {/* Book Now Button */}
+        <button className="btn-book-now" onClick={handleBookNow}>Book Now</button>
       </div>
     </div>
   );

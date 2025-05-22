@@ -1,0 +1,51 @@
+/* Center the profile container and restrict its width */
+.guide-profile-container {
+  max-width: 800px;
+  margin: auto;
+}
+
+/* Resize and style the profile image */
+.profile-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* Additional form styling */
+.card {
+  border-radius: 12px;
+  padding: 2rem;
+  background-color: #fff;
+}
+
+.form-group label {
+  font-weight: 500;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+select {
+  border-radius: 6px;
+}
+/* Remove hover effect on the card */
+
+.card:hover {
+  box-shadow: none !important;
+  border-color: inherit !important;
+}
+
+/* Optional: remove input/button focus effects if needed */
+.guide-card input:focus,
+.guide-card select:focus,
+.guide-card button:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Ensure no transition effects */
+.card {
+  transition: none !important;
+}
+
