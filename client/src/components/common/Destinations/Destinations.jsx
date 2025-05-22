@@ -11,13 +11,17 @@ function Destinations() {
   const navigate = useNavigate();
   const { getToken } = useAuth();
   const location = useLocation();
-  const city = location.state?.city || 'All'; // fallback to 'All' if city not provided
+  const city = location.state?.city || 'All';
+
+  useEffect(() => {
+    getDestinations();
+  }, [city]);
 
   async function getDestinations() {
     setIsLoading(true);
     const token = await getToken();
     try {
-      let res = await axios.get(`http://localhost:3000/admin-api/admin/destinations/${city}`, {
+      const res = await axios.get(`http://localhost:3000/admin-api/admin/destinations/${city}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -26,9 +30,11 @@ function Destinations() {
         setError('');
       } else {
         setError(res.data.message);
+        setDestinations([]);
       }
     } catch (err) {
       setError('Failed to fetch destinations. Please try again later...');
+      setDestinations([]);
     } finally {
       setIsLoading(false);
     }
@@ -38,9 +44,22 @@ function Destinations() {
     navigate(`/destinationbyid/${destinationObj._id}`, { state: destinationObj });
   }
 
-  useEffect(() => {
-    getDestinations();
-  }, [city]);
+
+function getDestinationImage(destinationObj) {
+  const firstImage = destinationObj.images?.[0];
+  console.log(firstImage);
+
+  if (!firstImage) {
+    return 'https://via.placeholder.com/300x200?text=No+Image';
+  }
+
+   if (!firstImage.startsWith('http') && firstImage.length < 200) {
+      return `http://localhost:3000/admin-api/admin/destination/photo?ref=${firstImage}`;
+    }
+
+
+  return firstImage;
+}
 
   return (
     <div className="container">
@@ -59,20 +78,20 @@ function Destinations() {
             {destinations.map((destinationObj, idx) => (
               <div className="col mb-3" key={idx}>
                 <div className="card h-100">
-                  <div className="card-body">
+                  <div className="card-body text-center">
                     <img
-                      src={destinationObj.images?.[0] || 'https://via.placeholder.com/300x200?text=No+Image'}
+                      src={getDestinationImage(destinationObj)}
                       alt="Destination"
                       className="img-fluid mb-2"
+                      style={{ width: "100%", height: "200px", objectFit: "cover" }}
                     />
-                    <h5>{destinationObj.nameOfDestination}</h5>
+                    <h5 className="mt-2">{destinationObj.nameOfDestination}</h5>
                     <p>{destinationObj.description}</p>
-                    <p>{destinationObj.location}</p>
                     <p>
                       Rating - {destinationObj.rating ?? 'N/A'}{' '}
                       {destinationObj.rating ? '⭐'.repeat(Math.round(destinationObj.rating)) : '🤷‍♂️'}
                     </p>
-                    <button className="btn btn-info" onClick={() => gotoDestinationById(destinationObj)}>
+                    <button className="btn btn-info mt-2" onClick={() => gotoDestinationById(destinationObj)}>
                       View Details...
                     </button>
                   </div>

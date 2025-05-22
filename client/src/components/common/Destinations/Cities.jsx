@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css'; // make sure bootstrap is imported
+import '../../../styles/Cities.css'
 
 const citiesData = [
   { id: 1, name: 'Delhi', speciality: 'Capital city with rich history and culture', image: 'https://source.unsplash.com/400x300/?delhi' },
@@ -29,11 +30,11 @@ function Cities() {
 
   return (
     <div className="container my-5">
-      <h1 className="text-center mb-5">Explore Indian Cities</h1>
+      <h1 className="text-center mb-5 text-light">Explore Indian Cities</h1>
       <div className="row">
         {citiesData.map((city) => (
           <div key={city.id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
-            <div className="card h-100 shadow-sm">
+            <div className="card h-100 shadow-sm glass-card">
               <div className="card-body d-flex flex-column">
                 <h5 className="card-title">{city.name}</h5>
                 <p className="card-text">{city.speciality}</p>
@@ -41,7 +42,7 @@ function Cities() {
                   className="btn btn-primary mt-auto"
                   onClick={() => handleClick(city.id)}
                 >
-                  Get to Know More
+                   Know More
                 </button>
               </div>
             </div>

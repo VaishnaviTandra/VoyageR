@@ -129,3 +129,39 @@ button:focus-visible {
 .custom-radio:active {
   transform: scale(1.1);
 }
+/*from here*/
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  color: #fff;
+  padding: 1rem;
+  font-size: 0.9rem; /* slightly smaller font */
+}
+
+.glass-card h4, 
+.glass-card h5 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #f0f0f0;
+}
+
+.glass-card p, 
+.glass-card small, 
+.glass-card span {
+  font-size: 0.85rem;
+  color: #ddd;
+}
+
+.glass-card .badge {
+  font-size: 0.75rem;
+  padding: 0.25em 0.6em;
+}
+
+/* To align badges nicely in a flex container */
+.glass-card .d-flex.flex-wrap.gap-2 > .badge {
+  margin-bottom: 0.3rem;
+}

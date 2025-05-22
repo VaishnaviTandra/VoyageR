@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../../../styles/CityById.css';
 
 const citiesData = [
   {
@@ -171,16 +172,16 @@ function CityById() {
 
   return (
     <div className="container my-5">
-      <h1 className="text-center mb-4">{city.name}</h1>
+      <h1 className="text-center mb-4 text-light">{city.name}</h1>
       <img src={city.image} alt={city.name} className="img-fluid rounded mb-5" />
 
       <div className="mb-4">
         {city.description.map((para, index) => (
-          <p key={index} className="lead">{para}</p>
+          <p key={index} className="lead text-light">{para}</p>
         ))}
       </div>
 
-      <div className="d-flex justify-content-center gap-3 mt-5 flex-wrap">
+      <div className="d-flex justify-content-center gap-3 mt-5 flex-wrap ">
         <button className="btn btn-primary" onClick={() => handleNavigate('/destinations')}>Explore Destinations</button>
         <button className="btn btn-success" onClick={() => handleNavigate('/hotels')}>Explore Hotels</button>
         <button className="btn btn-info" onClick={() => handleNavigate('/guides')}>View Guides</button>

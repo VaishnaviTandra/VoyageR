@@ -38,10 +38,7 @@ guideApp.get('/guide/bycity/:city', expressAsyncHandler(async (req, res) => {
 guideApp.post('/guides', expressAsyncHandler(async (req, res) => {
   const guideData = req.body;
 
-  // Validate required fields
-  if (!guideData.username || !guideData.email || !guideData.firstName || !guideData.lastName || !guideData.role) {
-      return res.status(400).send({ message: "Please provide all required fields: username, email, firstName, lastName, role." });
-  }
+  
 
   // Check if a guide with the same email already exists
   const existingGuide = await Guide.findOne({ email: guideData.email });
