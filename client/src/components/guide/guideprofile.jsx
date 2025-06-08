@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../../styles/GuideProfile.css'; // Ensure correct path
+import '../../styles/GuideProfile.css'; // Ensure the path is correct
 
 function GuideProfile() {
   const navigate = useNavigate();
@@ -92,12 +92,13 @@ function GuideProfile() {
     };
 
     try {
-      await axios.post('http://localhost:3000/guide-api/guides', payload);
-      alert('Form submitted successfully!');
+      const guideId = currentUser._id;
+      const res = await axios.put(`http://localhost:3000/guide-api/guides/${guideId}`, payload);
+      alert('Guide profile updated successfully!');
       navigate('/guidedetails');
     } catch (error) {
-      console.error('Error submitting form:', error.response ? error.response.data : error);
-      alert('Something went wrong while submitting the form.');
+      console.error('Error updating profile:', error.response?.data || error);
+      alert('Something went wrong while updating the profile.');
     }
   };
 
@@ -105,30 +106,22 @@ function GuideProfile() {
 
   return (
     <div className="container mt-5 guide-profile-container">
-      <div
-  className="card p-4 shadow"
-  style={{ backgroundColor: '#f0f0f0' }}
->
-
-<div
-  className="d-flex align-items-center mb-4"
-  style={{ marginLeft: '20px' }}  // <- more left margin
->
-  <img
-    src={formData.profileImgUrl}
-    alt="Profile"
-    style={{
-      width: '90px',
-      height: '90px',
-      objectFit: 'cover',
-      borderRadius: '50%',
-      marginRight: '20px',
-      border: '2px solid #ccc',
-    }}
-  />
-  <h2 className="mb-0 text-center" style={{ marginTop: '10px' }}>Guide Profile</h2>
-</div>
-
+      <div className="card p-4 shadow" style={{ backgroundColor: '#f0f0f0' }}>
+        <div className="d-flex align-items-center mb-4" style={{ marginLeft: '20px' }}>
+          <img
+            src={formData.profileImgUrl}
+            alt="Profile"
+            style={{
+              width: '90px',
+              height: '90px',
+              objectFit: 'cover',
+              borderRadius: '50%',
+              marginRight: '20px',
+              border: '2px solid #ccc',
+            }}
+          />
+          <h2 className="mb-0 text-center" style={{ marginTop: '10px' }}>Guide Profile</h2>
+        </div>
 
         <form onSubmit={handleSubmit}>
           {/* Username */}
@@ -158,8 +151,6 @@ function GuideProfile() {
               />
             </div>
           </div>
-
-          
 
           {/* Contact */}
           <div className="form-group row mt-3">
