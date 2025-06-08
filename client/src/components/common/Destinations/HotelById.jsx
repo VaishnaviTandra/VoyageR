@@ -11,6 +11,9 @@ const HotelById = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isVRMode, setIsVRMode] = useState(false);
 
+  // Get user role from localStorage (or replace with your actual auth logic)
+  const userRole = localStorage.getItem("userRole"); // e.g. "user" or "guide"
+
   useEffect(() => {
     const fetchHotel = async () => {
       try {
@@ -109,88 +112,7 @@ const HotelById = () => {
 
       {/* Images and VR Mode */}
       <div className="mb-4 position-relative">
-        <div className={`border rounded ${isVRMode ? "vh-100" : "vh-50"}`} style={{ overflow: "hidden" }}>
-          {hotel.images?.length > 0 ? (
-            isVRMode ? (
-              <div className="w-100 h-100">
-                <a-scene embedded>
-                  <a-assets>
-                    {hotel.images.map((img, index) => (
-                      <img key={index} id={`img-${index}`} src={img} crossOrigin="anonymous" />
-                    ))}
-                  </a-assets>
-
-                  <a-entity>
-                    <a-curvedimage
-                      src={`#img-${currentImageIndex}`}
-                      height="3"
-                      radius="3"
-                      theta-length="180"
-                      position="0 1.6 0"
-                      rotation="0 90 0"
-                    ></a-curvedimage>
-                  </a-entity>
-
-                  <a-sky color="#333"></a-sky>
-
-                  <a-camera position="0 1.6 0" look-controls>
-                    <a-cursor color="#FFFFFF"></a-cursor>
-                  </a-camera>
-
-                  <a-entity position="-2 1.6 -1">
-                    <a-box color="#333" depth="0.1" height="0.3" width="0.3" onClick={goToPreviousImage}>
-                      <a-text value="<" align="center" position="0 0 0.06" scale="0.5 0.5 0.5" color="#FFF" />
-                    </a-box>
-                  </a-entity>
-
-                  <a-entity position="2 1.6 -1">
-                    <a-box color="#333" depth="0.1" height="0.3" width="0.3" onClick={goToNextImage}>
-                      <a-text value=">" align="center" position="0 0 0.06" scale="0.5 0.5 0.5" color="#FFF" />
-                    </a-box>
-                  </a-entity>
-                </a-scene>
-              </div>
-            ) : (
-              <div className="position-relative">
-                <img
-                  src={hotel.images[currentImageIndex]}
-                  alt={`Image ${currentImageIndex + 1}`}
-                  className="img-fluid w-100"
-                  style={{ objectFit: "cover", height: "400px" }}
-                />
-                {hotel.images.length > 1 && (
-                  <>
-                    <button
-                      onClick={goToPreviousImage}
-                      className="btn btn-dark position-absolute top-50 start-0 translate-middle-y"
-                      style={{ zIndex: 10 }}
-                    >
-                      <ChevronLeft size={24} />
-                    </button>
-                    <button
-                      onClick={goToNextImage}
-                      className="btn btn-dark position-absolute top-50 end-0 translate-middle-y"
-                      style={{ zIndex: 10 }}
-                    >
-                      <ChevronRight size={24} />
-                    </button>
-                  </>
-                )}
-              </div>
-            )
-          ) : (
-            <div className="d-flex justify-content-center align-items-center bg-light" style={{ height: "400px", color: 'black' }}>
-              <p className="text-muted">No images available</p>
-            </div>
-          )}
-        </div>
-
-        {/* VR Mode Toggle */}
-        <div className="d-flex justify-content-between align-items-center mt-2">
-          <small className="text-muted" style={{ color: 'white' }}>
-            {hotel.images?.length > 0 ? `Image ${currentImageIndex + 1} of ${hotel.images.length}` : "No images"}
-          </small>
-        </div>
+        {/* ... your existing image/VR code ... */}
       </div>
 
       {/* Hotel Details */}
@@ -242,8 +164,10 @@ const HotelById = () => {
           </div>
         )}
 
-        {/* Book Now Button */}
-        <button className="btn-book-now" onClick={handleBookNow}>Book Now</button>
+        {/* Book Now Button: Only show if role is 'user' */}
+        {userRole === "user" && (
+          <button className="btn-book-now" onClick={handleBookNow}>Book Now</button>
+        )}
       </div>
     </div>
   );
