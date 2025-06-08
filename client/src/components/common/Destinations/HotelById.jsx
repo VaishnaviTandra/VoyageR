@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const HotelById = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [hotel, setHotel] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isVRMode, setIsVRMode] = useState(false);
 
-  // Get user role from localStorage (or replace with your actual auth logic)
-  const userRole = localStorage.getItem("userRole"); // e.g. "user" or "guide"
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const userRole = currentUser?.role || "";
+  console.log("Current role:", userRole);
 
   useEffect(() => {
     const fetchHotel = async () => {
@@ -37,6 +39,7 @@ const HotelById = () => {
       import("aframe")
         .then(() => console.log("A-Frame loaded successfully"))
         .catch((err) => {
+          console.error(err);
           setIsVRMode(false);
           setError("Failed to load VR viewer. Please try again.");
         });
@@ -58,7 +61,7 @@ const HotelById = () => {
   const toggleVRMode = () => setIsVRMode((prev) => !prev);
 
   const handleBookNow = () => {
-    alert(`Booking functionality for ${hotel.nameOfHotel} is not implemented yet.`);
+    navigate(`/book-hotel/${id}`, { state: { hotel } });
   };
 
   if (loading) {
@@ -106,27 +109,65 @@ const HotelById = () => {
         .btn-book-now:hover {
           background-color: #0056b3;
         }
+        .image-carousel {
+          position: relative;
+          max-width: 100%;
+          height: 400px;
+          overflow: hidden;
+        }
+        .carousel-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .carousel-btn {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          background: rgba(0, 0, 0, 0.5);
+          border: none;
+          color: white;
+          padding: 8px;
+          cursor: pointer;
+          z-index: 1;
+        }
+        .left-btn {
+          left: 10px;
+        }
+        .right-btn {
+          right: 10px;
+        }
       `}</style>
 
       <h1 className="mb-4">{hotel.nameOfHotel}</h1>
 
-      {/* Images and VR Mode */}
-      <div className="mb-4 position-relative">
-        {/* ... your existing image/VR code ... */}
+      {/* Image / VR Section */}
+      <div className="mb-4 image-carousel">
+        {isVRMode ? (
+          <a-scene embedded style={{ height: "400px" }}>
+            <a-sky src={hotel.images?.[currentImageIndex]} rotation="0 -130 0"></a-sky>
+          </a-scene>
+        ) : (
+          <>
+            <img
+              src={hotel.images?.[currentImageIndex]}
+              alt={`Hotel Image ${currentImageIndex + 1}`}
+              className="carousel-img"
+            />
+           
+          </>
+        )}
+       
       </div>
 
       {/* Hotel Details */}
       <div className="mb-4">
         <h4>About this Hotel</h4>
-
         <p><strong>Hotel Name:</strong> {hotel.nameOfHotel}</p>
-
         {hotel.address && (
           <p><strong>Location:</strong> {`${hotel.address.landmark}, ${hotel.address.city}, ${hotel.address.state} - ${hotel.address.pincode}`}</p>
         )}
-
         <p><strong>Cost per Day:</strong> ₹{hotel.costperDay}</p>
-
         <p><strong>Available Rooms:</strong> {hotel.availableRooms}</p>
 
         {hotel.luxuries?.length > 0 && (
@@ -155,8 +196,8 @@ const HotelById = () => {
             <ul className="list-group">
               {hotel.bookings.map((booking, idx) => (
                 <li key={idx} className="list-group-item">
-                  Check-In: {new Date(booking.checkIn).toLocaleDateString()} | 
-                  Check-Out: {new Date(booking.checkOut).toLocaleDateString()} | 
+                  Check-In: {new Date(booking.checkIn).toLocaleDateString()} |{" "}
+                  Check-Out: {new Date(booking.checkOut).toLocaleDateString()} |{" "}
                   Payment Status: <strong>{booking.paymentStatus}</strong>
                 </li>
               ))}
@@ -164,8 +205,8 @@ const HotelById = () => {
           </div>
         )}
 
-        {/* Book Now Button: Only show if role is 'user' */}
-        {userRole === "user" && (
+        {/* Book Now Button */}
+        {(userRole === "traveler" || userRole === "user") && (
           <button className="btn-book-now" onClick={handleBookNow}>Book Now</button>
         )}
       </div>

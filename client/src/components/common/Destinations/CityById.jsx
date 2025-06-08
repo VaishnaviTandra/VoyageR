@@ -161,8 +161,10 @@ function CityById() {
   const navigate = useNavigate();
 
   // Get the user role from localStorage (replace with your actual auth method)
-  const role = localStorage.getItem('userRole'); // e.g., 'user', 'traveller', etc.
-  const isUser = role === 'user';
+  const currentUser = JSON.parse(localStorage.getItem('currentUser')); // e.g., 'user', 'traveller', etc.
+  const role=currentUser.role;
+  console.log('Current role:', role); 
+  const isUser = role === 'traveler';
 
   const city = citiesData.find(c => c.id === parseInt(id));
 

@@ -81,4 +81,20 @@ userApp.get('/users/:email', async (req, res) => {
     console.error(err);
     return res.status(500).json({ message: 'Server error', error: err.message });
   }});
+  userApp.put('/user/book-hotel/:id', async (req, res) => {
+  try {
+    const hotelId = req.params.id;
+    const booking = req.body; // { user, checkIn, checkOut, totalPrice, paymentStatus }
+
+    const hotel = await Hotel.findById(hotelId);
+    if (!hotel) return res.status(404).json({ message: "Hotel not found" });
+
+    hotel.bookings.push(booking);
+    await hotel.save();
+
+    res.status(200).json({ message: "Booking added", hotel });
+  } catch (err) {
+    res.status(500).json({ message: "Error updating booking", error: err.message });
+  }
+});
 module.exports = userApp;
