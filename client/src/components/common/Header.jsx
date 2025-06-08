@@ -8,12 +8,11 @@ function Header() {
   const { isSignedIn, user } = useUser();
   const { signOut } = useClerk();
   const navigate = useNavigate();
-  const { setCurrentUser } = useContext(UserGuideContextobj);
+  const { setCurrentUser, currentUser } = useContext(UserGuideContextobj); // assume currentUser holds role info
 
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Close dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -32,6 +31,14 @@ function Header() {
     setCurrentUser(null);
     navigate("/");
   }
+
+  const goToProfile = () => {
+    if (currentUser?.role === "guide") {
+      navigate(`/guidedetails`);
+    } else {
+      navigate(`/user-profile/${currentUser.email}`);
+    }
+  };
 
   return (
     <div className="bg-overlay">
@@ -54,18 +61,17 @@ function Header() {
           </ul>
         ) : (
           <div className="d-flex align-items-center text-light">
-           <Link to="cities" className="des-link me-3"> Cities </Link>
-
+            <Link to="cities" className="des-link me-3"> Cities </Link>
 
             {/* Profile Section */}
-            <div className="text-white text-center me-3 position-relative">
+            <div className="text-white text-center me-3 position-relative d-flex align-items-center gap-2">
               <img
                 src={user?.imageUrl}
                 height="40"
                 width="40"
                 className="rounded-circle cursor-pointer"
                 alt="profile"
-                onClick={() => setShowDropdown(!showDropdown)} // Toggle dropdown visibility
+                onClick={() => setShowDropdown(!showDropdown)}
               />
               <div>{user?.username}</div>
 
@@ -76,13 +82,27 @@ function Header() {
                     <p><strong>Username:</strong> {user?.username}</p>
                     <p><strong>Email:</strong> {user?.emailAddresses[0].emailAddress}</p>
                   </div>
-                  <button className="btn btn-outline-danger w-100" onClick={handleSignOut}>
+
+                  {/* Profile Button */}
+                  <button
+                    className="btn btn-outline-primary w-100 mb-2"
+                    onClick={() => {
+                      goToProfile();
+                      setShowDropdown(false);
+                    }}
+                  >
+                    Profile
+                  </button>
+
+                  <button
+                    className="btn btn-outline-danger w-100"
+                    onClick={handleSignOut}
+                  >
                     Sign Out
                   </button>
                 </div>
               )}
             </div>
-
           </div>
         )}
       </div>

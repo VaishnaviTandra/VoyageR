@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import '../../styles/UserProfile.css' // Ensure you create this file
-
+import { useNavigate } from "react-router-dom";
+import {useState,useEffect} from 'react'
 function UserProfile() {
   const [userStatus, setUserStatus] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
-  const [bookings, setBookings] = useState([]);
-  const [showBookings, setShowBookings] = useState(false);
-  const [loadingBookings, setLoadingBookings] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -17,19 +13,9 @@ function UserProfile() {
     }
   }, []);
 
-  const handleViewBookings = async () => {
-    if (!currentUser) return;
-
-    setLoadingBookings(true);
-    try {
-      const res = await axios.get(`http://localhost:3000/user-api/user-bookings/${currentUser._id}`);
-      setBookings(res.data.bookings);
-      setShowBookings(true);
-    } catch (err) {
-      console.error("Error fetching bookings:", err);
-    } finally {
-      setLoadingBookings(false);
-    }
+  const handleViewBookings = () => {
+    // Navigate to UserBookings page
+    navigate('/user-bookings');
   };
 
   if (!currentUser) return <p>Loading...</p>;
@@ -44,7 +30,6 @@ function UserProfile() {
         </div>
       ) : (
         <div>
-          {/* Glassmorphic User Info */}
           <div className="glass-card user-info-card">
             <h3 className="mb-3">User Profile</h3>
             <div>
@@ -57,34 +42,9 @@ function UserProfile() {
             </div>
           </div>
 
-          {/* View Bookings Button */}
-          {!showBookings && (
-            <button className="view-bookings-btn" onClick={handleViewBookings}>
-              View Recent Hotel Bookings
-            </button>
-          )}
-
-          {loadingBookings && <p>Loading bookings...</p>}
-
-          {/* Glassmorphic Bookings List */}
-          {showBookings && bookings.length > 0 && (
-            <div className="bookings-section">
-              <h4>Recent Hotel Bookings</h4>
-              {bookings.map((b, i) => (
-                <div className="glass-card booking-card" key={i}>
-                  <h5>{b.hotelName} ({b.location})</h5>
-                  <p>Check-In: {new Date(b.checkIn).toLocaleDateString()}</p>
-                  <p>Check-Out: {new Date(b.checkOut).toLocaleDateString()}</p>
-                  <p>Total Price: ₹{b.totalPrice}</p>
-                  <p>Status: <strong>{b.paymentStatus}</strong></p>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {showBookings && bookings.length === 0 && (
-            <p>No bookings found.</p>
-          )}
+          <button className="view-bookings-btn" onClick={handleViewBookings}>
+            View Recent Hotel Bookings
+          </button>
         </div>
       )}
     </div>

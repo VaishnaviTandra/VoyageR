@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const HotelById = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [hotel, setHotel] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isVRMode, setIsVRMode] = useState(false);
+
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const userRole = currentUser?.role || "";
+  console.log("Current role:", userRole);
 
   useEffect(() => {
     const fetchHotel = async () => {
@@ -34,6 +39,7 @@ const HotelById = () => {
       import("aframe")
         .then(() => console.log("A-Frame loaded successfully"))
         .catch((err) => {
+          console.error(err);
           setIsVRMode(false);
           setError("Failed to load VR viewer. Please try again.");
         });
@@ -55,7 +61,7 @@ const HotelById = () => {
   const toggleVRMode = () => setIsVRMode((prev) => !prev);
 
   const handleBookNow = () => {
-    alert(`Booking functionality for ${hotel.nameOfHotel} is not implemented yet.`);
+    navigate(`/book-hotel/${id}`, { state: { hotel } });
   };
 
   if (loading) {
@@ -103,108 +109,65 @@ const HotelById = () => {
         .btn-book-now:hover {
           background-color: #0056b3;
         }
+        .image-carousel {
+          position: relative;
+          max-width: 100%;
+          height: 400px;
+          overflow: hidden;
+        }
+        .carousel-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .carousel-btn {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          background: rgba(0, 0, 0, 0.5);
+          border: none;
+          color: white;
+          padding: 8px;
+          cursor: pointer;
+          z-index: 1;
+        }
+        .left-btn {
+          left: 10px;
+        }
+        .right-btn {
+          right: 10px;
+        }
       `}</style>
 
       <h1 className="mb-4">{hotel.nameOfHotel}</h1>
 
-      {/* Images and VR Mode */}
-      <div className="mb-4 position-relative">
-        <div className={`border rounded ${isVRMode ? "vh-100" : "vh-50"}`} style={{ overflow: "hidden" }}>
-          {hotel.images?.length > 0 ? (
-            isVRMode ? (
-              <div className="w-100 h-100">
-                <a-scene embedded>
-                  <a-assets>
-                    {hotel.images.map((img, index) => (
-                      <img key={index} id={`img-${index}`} src={img} crossOrigin="anonymous" />
-                    ))}
-                  </a-assets>
-
-                  <a-entity>
-                    <a-curvedimage
-                      src={`#img-${currentImageIndex}`}
-                      height="3"
-                      radius="3"
-                      theta-length="180"
-                      position="0 1.6 0"
-                      rotation="0 90 0"
-                    ></a-curvedimage>
-                  </a-entity>
-
-                  <a-sky color="#333"></a-sky>
-
-                  <a-camera position="0 1.6 0" look-controls>
-                    <a-cursor color="#FFFFFF"></a-cursor>
-                  </a-camera>
-
-                  <a-entity position="-2 1.6 -1">
-                    <a-box color="#333" depth="0.1" height="0.3" width="0.3" onClick={goToPreviousImage}>
-                      <a-text value="<" align="center" position="0 0 0.06" scale="0.5 0.5 0.5" color="#FFF" />
-                    </a-box>
-                  </a-entity>
-
-                  <a-entity position="2 1.6 -1">
-                    <a-box color="#333" depth="0.1" height="0.3" width="0.3" onClick={goToNextImage}>
-                      <a-text value=">" align="center" position="0 0 0.06" scale="0.5 0.5 0.5" color="#FFF" />
-                    </a-box>
-                  </a-entity>
-                </a-scene>
-              </div>
-            ) : (
-              <div className="position-relative">
-                <img
-                  src={hotel.images[currentImageIndex]}
-                  alt={`Image ${currentImageIndex + 1}`}
-                  className="img-fluid w-100"
-                  style={{ objectFit: "cover", height: "400px" }}
-                />
-                {hotel.images.length > 1 && (
-                  <>
-                    <button
-                      onClick={goToPreviousImage}
-                      className="btn btn-dark position-absolute top-50 start-0 translate-middle-y"
-                      style={{ zIndex: 10 }}
-                    >
-                      <ChevronLeft size={24} />
-                    </button>
-                    <button
-                      onClick={goToNextImage}
-                      className="btn btn-dark position-absolute top-50 end-0 translate-middle-y"
-                      style={{ zIndex: 10 }}
-                    >
-                      <ChevronRight size={24} />
-                    </button>
-                  </>
-                )}
-              </div>
-            )
-          ) : (
-            <div className="d-flex justify-content-center align-items-center bg-light" style={{ height: "400px", color: 'black' }}>
-              <p className="text-muted">No images available</p>
-            </div>
-          )}
-        </div>
-
-        {/* VR Mode Toggle */}
-        <div className="d-flex justify-content-between align-items-center mt-2">
-          <small className="text-muted" style={{ color: 'white' }}>
-            {hotel.images?.length > 0 ? `Image ${currentImageIndex + 1} of ${hotel.images.length}` : "No images"}
-          </small>
-        </div>
+      {/* Image / VR Section */}
+      <div className="mb-4 image-carousel">
+        {isVRMode ? (
+          <a-scene embedded style={{ height: "400px" }}>
+            <a-sky src={hotel.images?.[currentImageIndex]} rotation="0 -130 0"></a-sky>
+          </a-scene>
+        ) : (
+          <>
+            <img
+              src={hotel.images?.[currentImageIndex]}
+              alt={`Hotel Image ${currentImageIndex + 1}`}
+              className="carousel-img"
+            />
+           
+          </>
+        )}
+       
       </div>
 
       {/* Hotel Details */}
       <div className="mb-4">
         <h4>About this Hotel</h4>
-
         <p><strong>Hotel Name:</strong> {hotel.nameOfHotel}</p>
-
         {hotel.address && (
           <p><strong>Location:</strong> {`${hotel.address.landmark}, ${hotel.address.city}, ${hotel.address.state} - ${hotel.address.pincode}`}</p>
         )}
-
         <p><strong>Cost per Day:</strong> ₹{hotel.costperDay}</p>
-
         <p><strong>Available Rooms:</strong> {hotel.availableRooms}</p>
 
         {hotel.luxuries?.length > 0 && (
@@ -233,8 +196,8 @@ const HotelById = () => {
             <ul className="list-group">
               {hotel.bookings.map((booking, idx) => (
                 <li key={idx} className="list-group-item">
-                  Check-In: {new Date(booking.checkIn).toLocaleDateString()} | 
-                  Check-Out: {new Date(booking.checkOut).toLocaleDateString()} | 
+                  Check-In: {new Date(booking.checkIn).toLocaleDateString()} |{" "}
+                  Check-Out: {new Date(booking.checkOut).toLocaleDateString()} |{" "}
                   Payment Status: <strong>{booking.paymentStatus}</strong>
                 </li>
               ))}
@@ -243,7 +206,9 @@ const HotelById = () => {
         )}
 
         {/* Book Now Button */}
-        <button className="btn-book-now" onClick={handleBookNow}>Book Now</button>
+        {(userRole === "traveler" || userRole === "user") && (
+          <button className="btn-book-now" onClick={handleBookNow}>Book Now</button>
+        )}
       </div>
     </div>
   );

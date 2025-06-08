@@ -160,15 +160,21 @@ function CityById() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  // Get the user role from localStorage (replace with your actual auth method)
+  const currentUser = JSON.parse(localStorage.getItem('currentUser')); // e.g., 'user', 'traveller', etc.
+  const role=currentUser.role;
+  console.log('Current role:', role); 
+  const isUser = role === 'traveler';
+
   const city = citiesData.find(c => c.id === parseInt(id));
 
   if (!city) {
     return <div className="text-center mt-5"><h2>City not found</h2></div>;
   }
+
   const handleNavigate = (path) => {
-    navigate(path, { state: { city: city.name } }); 
+    navigate(path, { state: { city: city.name } });
   };
-  
 
   return (
     <div className="container my-5">
@@ -182,9 +188,18 @@ function CityById() {
       </div>
 
       <div className="d-flex justify-content-center gap-3 mt-5 flex-wrap ">
-        <button className="btn btn-primary" onClick={() => handleNavigate('/destinations')}>Explore Destinations</button>
-        <button className="btn btn-success" onClick={() => handleNavigate('/hotels')}>Explore Hotels</button>
-        <button className="btn btn-info" onClick={() => handleNavigate('/guides')}>View Guides</button>
+        <button className="btn btn-primary" onClick={() => handleNavigate('/destinations')}>
+          Explore Destinations
+        </button>
+        <button className="btn btn-success" onClick={() => handleNavigate('/hotels')}>
+          Explore Hotels
+        </button>
+
+        {isUser && (
+          <button className="btn btn-info" onClick={() => handleNavigate('/guides')}>
+            View Guides
+          </button>
+        )}
       </div>
     </div>
   );

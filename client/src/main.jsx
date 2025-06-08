@@ -22,6 +22,8 @@ import Cities from './components/common/Destinations/Cities.jsx';
 import CityById from './components/common/Destinations/CityById.jsx';
 import Hotels from './components/common/Destinations/Hotels.jsx';
 import ViewguidesbyCity from './components/guide/ViewguidesbyCity.jsx';
+import HotelBookingsForm from './components/common/Destinations/HotelBookingForm.jsx';
+import UserBookings from './components/user/UserBookings.jsx';
 const browserRouterObj = createBrowserRouter([
   {
     path: '',
@@ -65,7 +67,13 @@ const browserRouterObj = createBrowserRouter([
         path:'guides',
         element:<ViewguidesbyCity/>
       },
-
+{
+path:'book-hotel/:id',
+element:<HotelBookingsForm/>
+},{
+path:'user-bookings',
+element:<UserBookings/>
+},
       // ✅ User profile route
       {
         path: 'user-profile/:email',
