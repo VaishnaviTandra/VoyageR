@@ -66,5 +66,19 @@ userApp.put('/block-status/:id', expressAsyncHandler(async (req, res) => {
 
   res.status(200).send({ message: `User ${isBlocked ? 'blocked' : 'unblocked'} successfully`, payload: updated });
 }));
+userApp.get('/users/:email', async (req, res) => {
+  const email = req.params.email;
 
+  try {
+    const existingUser = await User.findOne({ email });
+
+    if (!existingUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    return res.status(200).json({ message: 'User exists', payload: existingUser });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Server error', error: err.message });
+  }});
 module.exports = userApp;
