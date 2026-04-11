@@ -45,22 +45,41 @@ function Destinations() {
   }
 
 
+// function getDestinationImage(destinationObj) {
+//   const firstImage = destinationObj.images?.[0];
+//   console.log(firstImage);
+
+//   if (!firstImage) {
+//     return 'https://via.placeholder.com/300x200?text=No+Image';
+//   }
+
+//    if (!firstImage.startsWith('http') && firstImage.length < 200) {
+//       return `http://localhost:3000/admin-api/admin/destination/photo?ref=${firstImage}`;
+//     }
+
+
+//   return firstImage;
+// }
 function getDestinationImage(destinationObj) {
-  const firstImage = destinationObj.images?.[0];
-  console.log(firstImage);
+  let firstImage = destinationObj.images?.[0];
 
   if (!firstImage) {
     return 'https://via.placeholder.com/300x200?text=No+Image';
   }
 
-   if (!firstImage.startsWith('http') && firstImage.length < 200) {
-      return `http://localhost:3000/admin-api/admin/destination/photo?ref=${firstImage}`;
-    }
+  // ✅ HANDLE OLD DATA (object case)
+  if (typeof firstImage === 'object') {
+    firstImage = firstImage.photo_reference;
+  }
 
+  // If already full URL
+  if (typeof firstImage === 'string' && firstImage.startsWith('http')) {
+    return firstImage;
+  }
 
-  return firstImage;
+  // Google photo reference
+  return `http://localhost:3000/admin-api/admin/destination/photo?ref=${firstImage}`;
 }
-
   return (
     <div className="container">
       <div>

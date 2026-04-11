@@ -26,7 +26,15 @@ const HotelBookingsForm = () => {
     };
     fetchHotel();
   }, [id]);
-
+const loadRazorpay = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
   const calculateTotalPrice = () => {
     const inDate = new Date(checkIn);
     const outDate = new Date(checkOut);
@@ -58,7 +66,83 @@ const HotelBookingsForm = () => {
       setError("Booking failed. Please try again.");
     }
   };
+const handleOnlinePayment = async () => {
+  const res = await loadRazorpay();
 
+  if (!res) {
+    alert("Razorpay SDK failed to load");
+    return;
+  }
+
+  try {
+    // 1️⃣ Create order from backend
+    const orderRes = await axios.post(
+      "http://localhost:3000/payment/create-order",
+      { amount: totalPrice }
+    );
+
+    const order = orderRes.data;
+
+    // 2️⃣ Razorpay options
+    const options = {
+      key: "rzp_test_Sa637DwzFEQPcw", // replace with Razorpay key
+      amount: order.amount,
+      currency: "INR",
+      name: "VoyageR",
+      description: "Hotel Booking Payment",
+      order_id: order.id,
+
+      handler: async function (response) {
+        try {
+          // 3️⃣ Verify payment
+          const verifyRes = await axios.post(
+            "http://localhost:3000/payment/verify",
+            response
+          );
+
+          if (verifyRes.data.success) {
+            // 4️⃣ Save booking AFTER payment
+            await axios.put(
+              `http://localhost:3000/user-api/user/book-hotel/${id}`,
+              {
+                user: userId,
+                checkIn,
+                checkOut,
+                totalPrice,
+                paymentStatus: "paid",
+                paymentId: response.razorpay_payment_id,
+              }
+            );
+
+            alert("Payment successful 🎉");
+            navigate("/user-bookings");
+          } else {
+            alert("Payment verification failed");
+          }
+        } catch (err) {
+          console.error(err);
+          alert("Error saving booking");
+        }
+      },
+
+      prefill: {
+        name: currentUser?.username,
+        email: currentUser?.email,
+      },
+
+      theme: {
+        color: "#3399cc",
+      },
+    };
+
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
+
+  } catch (err) {
+    console.error(err);
+    alert("Payment failed");
+  }
+};
   useEffect(() => {
     if (checkIn && checkOut && hotel) {
       calculateTotalPrice();
@@ -112,9 +196,13 @@ const HotelBookingsForm = () => {
       <button className="btn btn-primary me-3" onClick={handleBookAtHotel}>
         Pay at Hotel
       </button>
-      <button className="btn btn-success" disabled>
-        Pay Online (Coming Soon)
-      </button>
+     <button
+  className="btn btn-success"
+  onClick={handleOnlinePayment}
+  disabled={!checkIn || !checkOut || totalPrice <= 0}
+>
+  Pay Online
+</button>
     </div>
   );
 };

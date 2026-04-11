@@ -19,7 +19,8 @@ const bookingSchema = new mongoose.Schema({
     checkIn: { type: Date, required: true },
     checkOut: { type: Date, required: true },
     totalPrice: { type: Number, required: true },
-    paymentStatus: { type: String, enum: ["pending", "paid"], default: "pending" }
+    paymentStatus: { type: String, enum: ["pending", "paid"], default: "pending" },
+    paymentId: { type: String }   // ✅ ADD THIS
 }, { strict: "throw" });
 const hotelSchema=new mongoose.Schema({
     nameOfHotel:{

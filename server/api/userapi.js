@@ -3,7 +3,7 @@ const userApp = exp.Router();
 const User = require('../modals/userguideSchema'); // same schema, filtering by role
 const Hotel=require('../modals/hotelsschema')
 const expressAsyncHandler = require('express-async-handler');
-
+const sendEmail = require('../utils/sendEmail');
 // Get all users (role: user)
 userApp.get('/users', expressAsyncHandler(async (req, res) => {
     const users = await User.find({ role: 'user' });
@@ -81,19 +81,51 @@ userApp.get('/users/:email', async (req, res) => {
     console.error(err);
     return res.status(500).json({ message: 'Server error', error: err.message });
   }});
-  userApp.put('/user/book-hotel/:id', async (req, res) => {
+ userApp.put('/user/book-hotel/:id', async (req, res) => {
   try {
     const hotelId = req.params.id;
-    const booking = req.body; // { user, checkIn, checkOut, totalPrice, paymentStatus }
+    const booking = req.body;
 
+    // ✅ Payment check
+    if (booking.paymentStatus === "paid" && !booking.paymentId) {
+      return res.status(400).json({ message: "Payment not verified" });
+    }
+
+    // ✅ Get hotel
     const hotel = await Hotel.findById(hotelId);
     if (!hotel) return res.status(404).json({ message: "Hotel not found" });
 
+    // ✅ Save booking
     hotel.bookings.push(booking);
     await hotel.save();
 
-    res.status(200).json({ message: "Booking added", hotel });
+    // ✅ Get user details (IMPORTANT)
+    const userData = await User.findById(booking.user);
+
+    // ✅ Send Email
+    await sendEmail(
+      userData.email,
+      "VoyageR Booking Confirmation 🎉",
+      `
+      <h2>Booking Confirmed!</h2>
+      <p><b>Hotel:</b> ${hotel.nameOfHotel}</p>
+      <p><b>Location:</b> ${hotel.address.city}</p>
+      <p><b>Check-in:</b> ${booking.checkIn}</p>
+      <p><b>Check-out:</b> ${booking.checkOut}</p>
+      <p><b>Total Price:</b> ₹${booking.totalPrice}</p>
+      <p><b>Payment Status:</b> ${booking.paymentStatus}</p>
+      <br/>
+      <p>Thank you for choosing VoyageR ✈️</p>
+      `
+    );
+
+    res.status(200).json({ 
+      message: "Booking added & email sent ✅", 
+      hotel 
+    });
+
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Error updating booking", error: err.message });
   }
 });

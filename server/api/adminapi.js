@@ -92,7 +92,55 @@ adminApp.get('/admin/destinations/:category', expressAsyncHandler(async (req, re
     }
   }));
 // backend route
+adminApp.post('/admin/destinations', expressAsyncHandler(async (req, res) => {
+    console.log("🔥 Received destination data:", req.body.length);
+  
+    try {
+      const data = req.body;
+  
+      if (Array.isArray(data)) {
+        const existingNames = await Destination.find({
+          nameOfDestination: { $in: data.map(d => d.nameOfDestination) }
+        }).distinct('nameOfDestination');
+  
+        const filtered = data.filter(
+          d => !existingNames.includes(d.nameOfDestination)
+        );
+  
+        if (filtered.length === 0) {
+          return res.status(200).send({ message: "All destinations already exist, nothing to add." });
+        }
+        const cleanedData = filtered.map(d => ({
+  ...d,
+  images: (d.images || []).map(img => {
+    if (typeof img === "object") return img.photo_reference;
+    if (typeof img === "string" && img.includes("photoreference=")) {
+      return img.split("photoreference=")[1];
+    }
+    return img;
+  })
+}));
 
+  
+        const inserted = await Destination.insertMany(cleanedData);
+        res.status(201).send({
+          message: `✅ Added ${inserted.length} new destinations. Skipped ${data.length - inserted.length} duplicates.`,
+          payload: inserted
+        });
+      } else {
+        const exists = await Destination.findOne({ nameOfDestination: data.nameOfDestination });
+        if (exists) {
+          return res.status(409).send({ message: "❌ Duplicate destination" });
+        }
+        const newDest = new Destination(data);
+        await newDest.save();
+        res.status(201).send({ message: "✅ Destination added successfully", payload: newDest });
+      }
+    } catch (error) {
+      console.error("❌ Error adding destination(s):", error.message);
+      res.status(500).send({ message: "Server Error", error: error.message });
+    }
+  }));
 adminApp.get('/admin/destination/photo', expressAsyncHandler(async (req, res) => {
   const ref = req.query.ref;
   if (!ref) return res.status(400).send("Missing photo reference");
@@ -118,44 +166,7 @@ adminApp.get('/admin/hotels3/:id', expressAsyncHandler(async (req, res) => {
   res.send({ message: "Hotel found", payload: hotel });
 }));
 
-adminApp.post('/admin/destinations', expressAsyncHandler(async (req, res) => {
-    console.log("🔥 Received destination data:", req.body.length);
-  
-    try {
-      const data = req.body;
-  
-      if (Array.isArray(data)) {
-        const existingNames = await Destination.find({
-          nameOfDestination: { $in: data.map(d => d.nameOfDestination) }
-        }).distinct('nameOfDestination');
-  
-        const filtered = data.filter(
-          d => !existingNames.includes(d.nameOfDestination)
-        );
-  
-        if (filtered.length === 0) {
-          return res.status(200).send({ message: "All destinations already exist, nothing to add." });
-        }
-  
-        const inserted = await Destination.insertMany(filtered);
-        res.status(201).send({
-          message: `✅ Added ${inserted.length} new destinations. Skipped ${data.length - inserted.length} duplicates.`,
-          payload: inserted
-        });
-      } else {
-        const exists = await Destination.findOne({ nameOfDestination: data.nameOfDestination });
-        if (exists) {
-          return res.status(409).send({ message: "❌ Duplicate destination" });
-        }
-        const newDest = new Destination(data);
-        await newDest.save();
-        res.status(201).send({ message: "✅ Destination added successfully", payload: newDest });
-      }
-    } catch (error) {
-      console.error("❌ Error adding destination(s):", error.message);
-      res.status(500).send({ message: "Server Error", error: error.message });
-    }
-  }));
+
 // Update destination
 adminApp.put('/admin/destinations/:id', expressAsyncHandler(async (req, res) => {
     const updated = await Destination.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
@@ -183,7 +194,7 @@ adminApp.get('/admin/userguides', expressAsyncHandler(async (req, res) => {
 adminApp.get('/admin/google-places', expressAsyncHandler(async (req, res) => {
     const { lat, lng } = req.query;
     const API_KEY = process.env.GOOGLE_API_KEY;
-
+    console.log(API_KEY)
     if (!lat || !lng) {
         return res.status(400).send({ message: "Latitude and longitude are required" });
     }
@@ -191,6 +202,7 @@ adminApp.get('/admin/google-places', expressAsyncHandler(async (req, res) => {
     try {
         const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=50000&type=tourist_attraction&key=${API_KEY}`;
         const response = await axios.get(url);
+        console.log(response.data);
         res.status(200).send({ message: "Places fetched successfully", payload: response.data });
     } catch (error) {
         console.error("Google API error:", error.message);

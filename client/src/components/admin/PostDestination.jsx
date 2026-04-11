@@ -39,25 +39,38 @@ function PostDestination() {
         });
 
         const results = res.data.payload.results;
+        console.log(`Fetched ${results.length} places for ${city.name}`);
+        // const cityDestinations = results.map(place => ({
+        //   nameOfDestination: place.name,
+        //   description: place.vicinity || `Popular tourist place in ${city.name}`,
+        //   location: `${place.geometry.location.lat},${place.geometry.location.lng}`,
+        //   images: place.photos
+        //     ? place.photos.slice(0, 6).map(p =>
+        //         `http://localhost:3000/admin-api/admin/photo?ref=${p.photo_reference}`
+        //       )
+        //     : ["https://via.placeholder.com/800x600?text=No+Image+Available"],
+        //   popularActivities: ["Sightseeing", "Photography"],
+        //   rating: place.rating || 0,
+        //   city: city.name
+        // }));
+const cityDestinations = results.map(place => ({
+  nameOfDestination: place.name,
+  description: place.vicinity || `Popular tourist place in ${city.name}`,
+  location: `${place.geometry.location.lat},${place.geometry.location.lng}`,
 
-        const cityDestinations = results.map(place => ({
-          nameOfDestination: place.name,
-          description: place.vicinity || `Popular tourist place in ${city.name}`,
-          location: `${place.geometry.location.lat},${place.geometry.location.lng}`,
-          images: place.photos
-            ? place.photos.slice(0, 6).map(p =>
-                `http://localhost:3000/admin-api/admin/photo?ref=${p.photo_reference}`
-              )
-            : ["https://via.placeholder.com/800x600?text=No+Image+Available"],
-          popularActivities: ["Sightseeing", "Photography"],
-          rating: place.rating || 0,
-          city: city.name
-        }));
+  // ✅ FIXED HERE
+  images: place.photos
+    ? place.photos.slice(0, 6).map(p => p.photo_reference)
+    : [],
 
+  popularActivities: ["Sightseeing", "Photography"],
+  rating: place.rating || 0,
+  city: city.name // ✅ already dynamic (GOOD JOB 👏)
+}));
         allDestinations = [...allDestinations, ...cityDestinations];
         setMessage(prev => `${prev}\n✅ Fetched ${cityDestinations.length} destinations for ${city.name}`);
       }
-
+      console.log("All fetched destinations:", allDestinations);
       if (allDestinations.length > 0) {
         await axios.post("http://localhost:3000/admin-api/admin/destinations", allDestinations);
         setMessage(prev => `${prev}\n✅ Successfully posted ${allDestinations.length} destinations to the database!`);

@@ -7,6 +7,9 @@ const cors = require('cors');
 const adminApp = require('./api/adminapi');
 const guideApp = require('./api/guideapi');
 const userApp = require('./api/userapi');
+const paymentApp = require('./api/paymentApi');
+
+
 
 // Enable CORS
 app.use(cors());
@@ -29,6 +32,7 @@ mongoose.connect(process.env.DBURL)
 app.use('/guide-api', guideApp);
 app.use('/admin-api', adminApp);
 app.use('/user-api', userApp);
+app.use('/payment', paymentApp);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
