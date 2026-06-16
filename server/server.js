@@ -16,6 +16,7 @@ app.use(cors());
 
 // ✅ Increase body size limit to handle large payloads (e.g., posting 300+ destinations)
 app.use(exp.json({ limit: '5mb' }));
+//the below middleware is used to parse the form data which cannot be done by above
 app.use(exp.urlencoded({ extended: true, limit: '5mb' }));
 
 const port = process.env.PORT || 4000;
